@@ -1,0 +1,796 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#08090a" />
+    <meta name="color-scheme" content="dark" />
+    <title>LULU AI STUDIO — Design System v2</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./tokens.css" />
+    <link rel="stylesheet" href="./components.css" />
+    <style>
+      /* ===== 展示页框架（仅此页使用，非组件体系） ===== */
+      :root {
+        --show-pad: clamp(18px, 4vw, 48px);
+      }
+      body {
+        overflow-x: hidden;
+      }
+      .ds-shell {
+        width: min(1280px, 100%);
+        margin: 0 auto;
+        padding: 0 var(--show-pad);
+      }
+      .ds-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-4);
+        min-height: var(--header-height);
+        border-bottom: var(--line-hairline) solid var(--color-line);
+        background: hsl(0 0% 3% / 0.72);
+        -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+        backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+      }
+      .ds-header__brand {
+        display: flex;
+        align-items: baseline;
+        gap: var(--space-3);
+      }
+      .ds-header__brand strong {
+        font-size: var(--text-h3);
+        font-weight: var(--weight-semibold);
+        letter-spacing: 0.02em;
+      }
+      .ds-header__brand span {
+        color: var(--color-text-tertiary);
+        font-size: var(--text-micro);
+        font-weight: var(--weight-medium);
+      }
+      .ds-header__actions {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+      }
+      .ds-kicker {
+        margin: calc(var(--section-y) * 0.8) 0 var(--space-3);
+        color: var(--color-text-tertiary);
+        font-size: var(--text-micro);
+        font-weight: var(--weight-semibold);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+      }
+      .ds-title {
+        margin: 0 0 var(--space-4);
+        font-size: var(--text-h1);
+        font-weight: var(--weight-semibold);
+        line-height: 1.05;
+        letter-spacing: -0.01em;
+      }
+      .ds-lede {
+        max-width: 60ch;
+        margin: 0 0 var(--space-8);
+        color: var(--color-text-secondary);
+        font-size: var(--text-lead);
+        line-height: 1.7;
+      }
+      .ds-section {
+        padding: calc(var(--section-y) * 0.7) 0;
+        border-top: var(--line-hairline) solid var(--color-line);
+      }
+      .ds-section__head {
+        margin-bottom: var(--space-8);
+      }
+      .ds-section__head h2 {
+        margin: 0 0 var(--space-2);
+        font-size: var(--text-h2);
+        font-weight: var(--weight-semibold);
+      }
+      .ds-section__head p {
+        margin: 0;
+        color: var(--color-text-tertiary);
+        font-size: var(--text-sm);
+      }
+      .ds-sub {
+        margin: var(--space-8) 0 var(--space-4);
+        font-size: var(--text-h3);
+        font-weight: var(--weight-semibold);
+      }
+      .ds-grid {
+        display: grid;
+        gap: var(--gap-grid);
+      }
+      .ds-grid--2 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .ds-grid--3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .ds-grid--4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+      @media (max-width: 900px) {
+        .ds-grid--3,
+        .ds-grid--4 {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .ds-grid--2 {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 560px) {
+        .ds-grid--3,
+        .ds-grid--4 {
+          grid-template-columns: 1fr;
+        }
+      }
+      .token-swatch {
+        overflow: hidden;
+        border-radius: var(--radius-panel);
+        border: var(--line-hairline) solid var(--color-line);
+        background: var(--color-surface);
+      }
+      .token-swatch__chip {
+        height: 76px;
+      }
+      .token-swatch__body {
+        padding: var(--space-3) var(--space-4);
+      }
+      .token-swatch__name {
+        margin: 0 0 2px;
+        font-size: var(--text-xs);
+        font-weight: var(--weight-semibold);
+        color: var(--color-text);
+      }
+      .token-swatch__value {
+        margin: 0;
+        font-family: var(--font-mono);
+        font-size: var(--text-micro);
+        color: var(--color-text-tertiary);
+      }
+      .token-type {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--space-4);
+        padding: var(--space-4) 0;
+        border-bottom: var(--line-hairline) solid var(--color-line);
+      }
+      .token-type__sample {
+        margin: 0;
+        color: var(--color-text);
+      }
+      .token-type__sample code {
+        font-family: var(--font-mono);
+        font-size: var(--text-micro);
+        color: var(--color-text-tertiary);
+        margin-left: var(--space-3);
+      }
+      .token-rule {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+        padding: var(--space-3) 0;
+      }
+      .token-rule__line {
+        flex: 0 0 160px;
+        height: 0;
+      }
+      .token-rule__line--hairline {
+        border-top: var(--line-hairline) solid var(--color-line);
+      }
+      .token-rule__line--strong {
+        border-top: var(--line-focus) solid var(--color-line-strong);
+      }
+      .token-rule__line--focus {
+        border-top: var(--line-focus) solid var(--color-line-focus);
+      }
+      .token-space {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        padding: var(--space-2) 0;
+      }
+      .token-space__bar {
+        flex: 0 0 auto;
+        height: 18px;
+        border-radius: var(--radius-inner);
+        background: var(--color-text);
+        opacity: 0.85;
+      }
+      .token-space__label {
+        color: var(--color-text-secondary);
+        font-size: var(--text-xs);
+      }
+      .token-space__label code {
+        font-family: var(--font-mono);
+        color: var(--color-text-tertiary);
+        font-size: var(--text-micro);
+      }
+      .demo-stage {
+        position: relative;
+        border-radius: var(--radius-card);
+        border: var(--line-hairline) solid var(--color-line);
+        background:
+          radial-gradient(1200px 500px at 50% -10%, hsl(0 0% 100% / 0.04), transparent 60%),
+          var(--color-bg-elevated);
+        padding: var(--space-8);
+        overflow: hidden;
+      }
+      .demo-stage__label {
+        margin: 0 0 var(--space-6);
+        color: var(--color-text-tertiary);
+        font-size: var(--text-micro);
+        font-weight: var(--weight-medium);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .halo-demo {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--gap-grid);
+      }
+      @media (max-width: 900px) {
+        .halo-demo {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+      .halo-cell {
+        min-height: 96px;
+        display: grid;
+        place-items: center;
+        border-radius: var(--radius-card);
+        border: var(--line-hairline) solid var(--color-line);
+        background: var(--color-surface);
+        color: var(--color-text-secondary);
+        font-size: var(--text-sm);
+        font-weight: var(--weight-medium);
+      }
+      .ds-footer {
+        padding: var(--space-10) 0 var(--space-16);
+        border-top: var(--line-hairline) solid var(--color-line);
+        color: var(--color-text-tertiary);
+        font-size: var(--text-xs);
+      }
+      .btn .spark {
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="cursor-halo" id="cursorHalo" aria-hidden="true"></div>
+
+    <header class="ds-header">
+      <div class="ds-shell ds-header__brand">
+        <strong>LULU AI STUDIO</strong>
+        <span>Design System v2</span>
+      </div>
+      <div class="ds-header__actions">
+        <span class="tag tag--strong">Anime.js</span>
+        <label class="switch">
+          <input type="checkbox" id="haloToggle" checked />
+          <span class="switch__track"></span>
+          <span class="switch__label">鼠标光晕</span>
+        </label>
+      </div>
+    </header>
+
+    <main>
+      <!-- ============ HERO ============ -->
+      <section class="ds-shell" style="padding-top: var(--space-12)">
+        <p class="ds-kicker">Design Language · Tokens &amp; Components</p>
+        <h1 class="ds-title">让想象力，拥有镜头语言</h1>
+        <p class="ds-lede">
+          一套统一的碳黑 × 银色液态玻璃设计语言。所有组件共享同一组令牌：
+          字体、颜色、粗细、圆角、线条、缝隙与动效。
+          预览确认后即可整体应用到主站。
+        </p>
+        <div class="btn-group">
+          <a class="btn btn--primary" href="#tokens">查看令牌</a>
+          <a class="btn btn--quiet" href="#components">查看组件</a>
+          <a class="btn btn--glass" href="#interaction">查看交互</a>
+        </div>
+      </section>
+
+      <!-- ============ TOKENS ============ -->
+      <section class="ds-section" id="tokens">
+        <div class="ds-shell">
+          <div class="ds-section__head reveal">
+            <h2>01 · 设计令牌</h2>
+            <p>以下内容由 tokens.css 实时读取渲染，修改令牌即同步更新。</p>
+          </div>
+          <div id="tokenColor" class="ds-grid ds-grid--4"></div>
+          <div class="ds-sub reveal">字号阶梯</div>
+          <div id="tokenType"></div>
+          <div class="ds-sub reveal">字重</div>
+          <div id="tokenWeight"></div>
+          <div class="ds-sub reveal">圆角</div>
+          <div id="tokenRadius"></div>
+          <div class="ds-sub reveal">线条</div>
+          <div id="tokenLine"></div>
+          <div class="ds-sub reveal">间距（4pt 网格）</div>
+          <div id="tokenSpace"></div>
+        </div>
+      </section>
+
+      <!-- ============ COMPONENTS ============ -->
+      <section class="ds-section" id="components">
+        <div class="ds-shell">
+          <div class="ds-section__head reveal">
+            <h2>02 · 组件</h2>
+            <p>所有组件引用同一套令牌，统一圆角、线条、缝隙与动效。</p>
+          </div>
+
+          <!-- 液态玻璃 -->
+          <div class="demo-stage reveal">
+            <p class="demo-stage__label">Liquid Glass · 透明流动材质</p>
+            <div class="ds-grid ds-grid--2">
+              <div class="glass" style="padding: var(--space-6); border-radius: var(--radius-card)">
+                <p class="card__meta">GLASS · 弱</p>
+                <p class="card__title" style="margin-top: var(--space-2)">backdrop blur + 半透明</p>
+                <p class="card__desc">流动的边缘高光与背景模糊，文字始终清晰。</p>
+              </div>
+              <div class="glass-strong" style="padding: var(--space-6); border-radius: var(--radius-card)">
+                <p class="card__meta">GLASS · 强</p>
+                <p class="card__title" style="margin-top: var(--space-2)">更强模糊 + 更亮表面</p>
+                <p class="card__desc">用于需要更强层级的主面板与强调卡片。</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 按钮 -->
+          <div class="demo-stage reveal">
+            <p class="demo-stage__label">Buttons · 按钮</p>
+            <div class="btn-group">
+              <button class="btn btn--primary" type="button">主要按钮</button>
+              <button class="btn btn--quiet" type="button">次要按钮</button>
+              <button class="btn btn--glass" type="button">玻璃按钮</button>
+              <button class="btn btn--primary btn--sm" type="button">紧凑</button>
+              <button class="btn btn--quiet btn--sm" type="button">紧凑次按钮</button>
+            </div>
+            <p class="card__desc" style="margin-top: var(--space-6)">
+              统一高度 <code>--control-height: 46px</code>，相邻缝隙 <code>--control-gap: 8px</code>，hover 上浮、按压回缩。
+            </p>
+          </div>
+
+          <!-- 标签 -->
+          <div class="demo-stage reveal">
+            <p class="demo-stage__label">Tags · 标签</p>
+            <div class="tag-group">
+              <span class="tag tag--active">全部</span>
+              <span class="tag">AI TVC</span>
+              <span class="tag">AI漫剧</span>
+              <span class="tag tag--strong">音效设计</span>
+              <span class="tag">地产广告</span>
+            </div>
+          </div>
+
+          <!-- 卡片 -->
+          <div class="demo-stage reveal">
+            <p class="demo-stage__label">Cards · 卡片（三种表面）</p>
+            <div class="ds-grid ds-grid--3">
+              <article class="card">
+                <p class="card__meta">SURFACE</p>
+                <h3 class="card__title" style="margin-top: var(--space-2)">常规卡片</h3>
+                <p class="card__desc">标准表面，圆角 12px，内边距 24px。</p>
+              </article>
+              <article class="card card--raised">
+                <p class="card__meta">RAISED</p>
+                <h3 class="card__title" style="margin-top: var(--space-2)">抬升卡片</h3>
+                <p class="card__desc">更亮表面 + 深投影，用于强调层级。</p>
+              </article>
+              <article class="card card--glass">
+                <p class="card__meta">GLASS</p>
+                <h3 class="card__title" style="margin-top: var(--space-2)">玻璃卡片</h3>
+                <p class="card__desc">半透明 + 背景模糊，用于叠在影像上。</p>
+              </article>
+            </div>
+          </div>
+
+          <!-- 表单 -->
+          <div class="demo-stage reveal">
+            <p class="demo-stage__label">Form · 表单控件</p>
+            <div class="ds-grid ds-grid--3">
+              <div class="field">
+                <label for="demoName">称呼</label>
+                <input class="input" id="demoName" type="text" placeholder="你的名字" />
+              </div>
+              <div class="field">
+                <label for="demoMsg">需求</label>
+                <input class="input" id="demoMsg" type="text" placeholder="想合作的项目类型" />
+              </div>
+              <div class="field" style="justify-content: flex-end">
+                <label class="switch">
+                  <input type="checkbox" id="demoSwitch" checked />
+                  <span class="switch__track"></span>
+                  <span class="switch__label">接收回访</span>
+                </label>
+              </div>
+              <div class="field" style="grid-column: 1 / -1">
+                <label>加载演示</label>
+                <div class="progress" style="width: 100%">
+                  <div class="progress__bar" id="demoProgress"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ INTERACTION ============ -->
+      <section class="ds-section" id="interaction">
+        <div class="ds-shell">
+          <div class="ds-section__head reveal">
+            <h2>03 · 鼠标交互连贯性</h2>
+            <p>全局光晕跟随、组件间递进联动、BorderGlow 描边光、Spotlight 聚光。</p>
+          </div>
+
+          <!-- 全局鼠标光晕 -->
+          <div class="demo-stage reveal">
+            <p class="demo-stage__label">Cursor Halo · 全局鼠标光晕（已开启，移动鼠标感受）</p>
+            <div class="halo-demo">
+              <div class="halo-cell">01</div>
+              <div class="halo-cell">02</div>
+              <div class="halo-cell">03</div>
+              <div class="halo-cell">04</div>
+            </div>
+            <p class="card__desc" style="margin-top: var(--space-6)">
+              一个 360px 的半透明光晕跟随指针，跨组件连续移动，不中断、不卡顿。
+            </p>
+          </div>
+
+          <!-- 相邻联动 -->
+          <div class="demo-stage reveal">
+            <p class="demo-stage__label">Hover Chain · 相邻组件递进联动</p>
+            <div class="hover-chain">
+              <article class="card" style="flex: 1 1 180px">
+                <p class="card__meta">A</p>
+                <h3 class="card__title" style="margin-top: var(--space-2)">镜头语言</h3>
+                <p class="card__desc">悬停任一卡片，相邻卡片轻微退让。</p>
+              </article>
+              <article class="card" style="flex: 1 1 180px">
+                <p class="card__meta">B</p>
+                <h3 class="card__title" style="margin-top: var(--space-2)">叙事节奏</h3>
+                <p class="card__desc">形成连贯的"递进焦点"。</p>
+              </article>
+              <article class="card" style="flex: 1 1 180px">
+                <p class="card__meta">C</p>
+                <h3 class="card__title" style="margin-top: var(--space-2)">声音空间</h3>
+                <p class="card__desc">鼠标在组件之间移动更连贯。</p>
+              </article>
+            </div>
+          </div>
+
+          <!-- BorderGlow -->
+          <div class="demo-stage reveal">
+            <p class="demo-stage__label">BorderGlow · 流动描边光（移动鼠标靠近边缘）</p>
+            <div class="glow-frame" id="demoGlow" style="padding: var(--space-8)">
+              <span class="edge-light" aria-hidden="true"></span>
+              <p class="card__meta">DIRECTOR-LED VISUALS</p>
+              <h3 class="card__title" style="margin-top: var(--space-2)">描边光随指针角度旋转，靠近边缘增强。</h3>
+              <p class="card__desc">conic-gradient 沿光标方向流动，是主站 Hero 与作品区的核心材质。</p>
+            </div>
+          </div>
+
+          <!-- Spotlight -->
+          <div class="demo-stage reveal">
+            <p class="demo-stage__label">Spotlight · 径向聚光卡片</p>
+            <div class="ds-grid ds-grid--3">
+              <article class="card spotlight" data-spotlight>
+                <p class="card__meta">AI TVC</p>
+                <h3 class="card__title" style="margin-top: var(--space-2)">别克昂科威Plus</h3>
+                <p class="card__desc">聚光跟随指针，突出可点按区域。</p>
+              </article>
+              <article class="card spotlight" data-spotlight>
+                <p class="card__meta">AI DRAMA</p>
+                <h3 class="card__title" style="margin-top: var(--space-2)">哭包人鱼</h3>
+                <p class="card__desc">与相邻卡片共享同一套反馈节奏。</p>
+              </article>
+              <article class="card spotlight" data-spotlight>
+                <p class="card__meta">SOUND</p>
+                <h3 class="card__title" style="margin-top: var(--space-2)">存在</h3>
+                <p class="card__desc">hover 上浮 + 聚光渐显。</p>
+              </article>
+            </div>
+          </div>
+
+          <!-- Anime.js 动效 -->
+          <div class="demo-stage reveal">
+            <p class="demo-stage__label">Anime.js · 轻量动画（17KB，替代 GSAP）</p>
+            <div class="btn-group">
+              <button class="btn btn--primary" type="button" data-anime="replay">重播入场</button>
+              <button class="btn btn--quiet" type="button" data-anime="spin">旋转示例</button>
+              <button class="btn btn--quiet" type="button" data-anime="count">计数动画</button>
+            </div>
+            <div style="display: flex; align-items: center; gap: var(--space-8); margin-top: var(--space-8)">
+              <div class="glass" id="demoCube" style="width: 88px; height: 88px; border-radius: var(--radius-panel); display: grid; place-items: center; font-weight: var(--weight-semibold)">LULU</div>
+              <div style="font-size: var(--text-h2); font-weight: var(--weight-semibold)"><span id="demoCount">0</span><span style="color: var(--color-text-tertiary)"> 帧 / 秒</span></div>
+            </div>
+            <p class="card__desc" style="margin-top: var(--space-6)">
+              入场、滚动揭示、数字滚动、轮播位移统一由 Anime.js 驱动，GPU 友好、可随时暂停。
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="ds-shell ds-footer">
+      <p>LULU AI STUDIO · Design System v2 · tokens.css + components.css · Anime.js v3.2.2</p>
+      <p>确认本设计语言后，将应用到主站 index.html / styles.css / script.js。</p>
+    </footer>
+
+    <script src="./assets/anime.min.js"></script>
+    <script>
+      /* ============================================================
+         Token 渲染：从 :root 实时读取令牌，保证展示与定义同步
+         ============================================================ */
+      const rootStyle = getComputedStyle(document.documentElement);
+      const tokenValue = (name) => rootStyle.getPropertyValue(name).trim();
+
+      const swatchGroups = [
+        { title: "表面层级", list: ["--color-bg", "--color-bg-elevated", "--color-surface", "--color-surface-raised", "--color-surface-glass", "--color-surface-glass-strong", "--color-overlay"] },
+        { title: "文字", list: ["--color-text", "--color-text-secondary", "--color-text-tertiary", "--color-text-on-accent"] },
+        { title: "线条 / 高光", list: ["--color-line", "--color-line-strong", "--color-line-focus", "--color-glass-highlight", "--color-glass-glow", "--color-cursor-halo"] },
+      ];
+
+      const typeTokens = ["--text-display", "--text-h1", "--text-h2", "--text-h3", "--text-lead", "--text-body", "--text-sm", "--text-xs", "--text-micro"];
+      const weightTokens = ["--weight-regular", "--weight-medium", "--weight-semibold", "--weight-bold"];
+      const radiusTokens = ["--radius-card", "--radius-panel", "--radius-inner", "--radius-control"];
+      const spaceTokens = ["--space-1", "--space-2", "--space-3", "--space-4", "--space-5", "--space-6", "--space-8", "--space-10", "--space-12", "--space-16"];
+
+      function swatchHTML(name) {
+        const value = tokenValue(name);
+        return (
+          '<div class="token-swatch reveal">' +
+          '<div class="token-swatch__chip" style="background:' + value + '; ' + (name.includes("text-on-accent") || name.includes("glass-highlight") || name.includes("line-focus") || name === "--color-text" ? "background-image:linear-gradient(135deg, rgba(255,255,255,.9), rgba(255,255,255,.28))" : "") + '"></div>' +
+          '<div class="token-swatch__body"><p class="token-swatch__name">' + name + '</p><p class="token-swatch__value">' + value + '</p></div></div>'
+        );
+      }
+
+      const colorHost = document.getElementById("tokenColor");
+      let colorHTML = "";
+      swatchGroups.forEach((group) => {
+        colorHTML += '<div style="grid-column: 1 / -1" class="ds-sub" style="margin-bottom: var(--space-3)">' + group.title + "</div>";
+        group.list.forEach((name) => (colorHTML += swatchHTML(name)));
+      });
+      colorHost.innerHTML = colorHTML;
+
+      const typeHost = document.getElementById("tokenType");
+      typeHost.innerHTML = typeTokens
+        .map((name) => {
+          const value = tokenValue(name);
+          return (
+            '<div class="token-type reveal"><p class="token-type__sample" style="font-size:' + value + '; font-weight: var(--weight-semibold); line-height:1.1">影<span style="color: var(--color-text-tertiary)">像</span>' +
+            '<code>' + name + ' · ' + value + "</code></p></div>"
+          );
+        })
+        .join("");
+
+      const weightHost = document.getElementById("tokenWeight");
+      const weightNames = {
+        "--weight-regular": "Regular 常规",
+        "--weight-medium": "Medium 中等",
+        "--weight-semibold": "Semibold 半粗",
+        "--weight-bold": "Bold 粗体",
+      };
+      weightHost.innerHTML = weightTokens
+        .map((name) => {
+          const value = tokenValue(name);
+          return (
+            '<div class="token-type reveal"><p class="token-type__sample" style="font-weight:' + value + '">' + weightNames[name] +
+            '<code>' + name + " · " + value + "</code></p></div>"
+          );
+        })
+        .join("");
+
+      const radiusHost = document.getElementById("tokenRadius");
+      radiusHost.innerHTML =
+        '<div class="ds-grid ds-grid--4">' +
+        radiusTokens
+          .map((name) => {
+            const value = tokenValue(name);
+            return (
+              '<div class="token-swatch reveal"><div class="token-swatch__chip" style="display:grid;place-items:center;border-radius:' + value + ';background:var(--color-surface-raised);border:var(--line-hairline) solid var(--color-line)"><span style="font-size:var(--text-micro);color:var(--color-text-tertiary)">' + value + "</span></div>" +
+              '<div class="token-swatch__body"><p class="token-swatch__name">' + name + '</p><p class="token-swatch__value">' + value + "</p></div></div>"
+            );
+          })
+          .join("") +
+        "</div>";
+
+      const lineHost = document.getElementById("tokenLine");
+      lineHost.innerHTML =
+        '<div class="token-rule reveal"><div class="token-rule__line token-rule__line--hairline"></div><span class="card__desc">--line-hairline · 1px · 常规描边 / 分隔</span></div>' +
+        '<div class="token-rule reveal"><div class="token-rule__line token-rule__line--strong"></div><span class="card__desc">--line-strong · 强描边 / hover</span></div>' +
+        '<div class="token-rule reveal"><div class="token-rule__line token-rule__line--focus"></div><span class="card__desc">--line-focus · 2px · 键盘焦点 / 激活</span></div>';
+
+      const spaceHost = document.getElementById("tokenSpace");
+      spaceHost.innerHTML = spaceTokens
+        .map((name) => {
+          const value = tokenValue(name);
+          const num = parseFloat(value) || 0;
+          return (
+            '<div class="token-space reveal"><div class="token-space__bar" style="width:' + Math.max(num * 2, 4) + 'px"></div>' +
+            '<span class="token-space__label">' + name + " <code>" + value + "</code></span></div>"
+          );
+        })
+        .join("");
+
+      /* ============================================================
+         交互：全局鼠标光晕
+         ============================================================ */
+      const halo = document.getElementById("cursorHalo");
+      const haloEnabled = document.getElementById("haloToggle");
+      const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+      let haloFrame = null;
+
+      function moveHalo(x, y) {
+        halo.style.transform = "translate3d(" + x + "px," + y + "px,0)";
+      }
+      window.addEventListener("pointermove", (e) => {
+        if (!haloEnabled.checked) return;
+        if (haloFrame) return;
+        haloFrame = window.requestAnimationFrame(() => {
+          haloFrame = null;
+          moveHalo(e.clientX, e.clientY);
+        });
+      });
+      window.addEventListener("pointerdown", () => moveHalo(event.clientX, event.clientY));
+
+      if (!finePointer) {
+        haloEnabled.checked = false;
+      }
+      haloEnabled.addEventListener("change", () => {
+        document.body.classList.toggle("halo-on", haloEnabled.checked && finePointer);
+      });
+      if (haloEnabled.checked && finePointer) document.body.classList.add("halo-on");
+
+      /* ============================================================
+         交互：BorderGlow 描边光
+         ============================================================ */
+      const glowFrames = [...document.querySelectorAll(".glow-frame")];
+      glowFrames.forEach((frame) => {
+        function updateGlow(e) {
+          const rect = frame.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const cx = rect.width / 2;
+          const cy = rect.height / 2;
+          const dx = x - cx;
+          const dy = y - cy;
+          const sx = dx === 0 ? Infinity : cx / Math.abs(dx);
+          const sy = dy === 0 ? Infinity : cy / Math.abs(dy);
+          const proximity = Math.min(Math.max(1 / Math.min(sx, sy), 0), 1);
+          let angle = (Math.atan2(dy, dx) * 180) / Math.PI + 90;
+          if (angle < 0) angle += 360;
+          frame.style.setProperty("--edge-proximity", (proximity * 100).toFixed(3));
+          frame.style.setProperty("--cursor-angle", angle.toFixed(3) + "deg");
+          frame.style.setProperty("--edge-alpha", Math.max(0, Math.min(1, (proximity * 100 - 18) / 82)).toFixed(3));
+        }
+        frame.addEventListener("pointermove", (e) => window.requestAnimationFrame(() => updateGlow(e)));
+        frame.addEventListener("pointerleave", () => {
+          frame.style.setProperty("--edge-proximity", "0");
+          frame.style.setProperty("--edge-alpha", "0");
+        });
+      });
+
+      /* ============================================================
+         交互：Spotlight 聚光
+         ============================================================ */
+      const spotCards = [...document.querySelectorAll("[data-spotlight]")];
+      spotCards.forEach((card) => {
+        card.addEventListener("pointermove", (e) => {
+          const rect = card.getBoundingClientRect();
+          card.style.setProperty("--spotlight-x", (((e.clientX - rect.left) / rect.width) * 100).toFixed(2) + "%");
+          card.style.setProperty("--spotlight-y", (((e.clientY - rect.top) / rect.height) * 100).toFixed(2) + "%");
+        });
+      });
+
+      /* ============================================================
+         Anime.js 动效
+         ============================================================ */
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const cube = document.getElementById("demoCube");
+      const countEl = document.getElementById("demoCount");
+      const progressEl = document.getElementById("demoProgress");
+      let spinTimeline = null;
+
+      function replayEntrance() {
+        if (reduceMotion) return;
+        const targets = [".ds-title", ".ds-lede", ".ds-header__actions", ".ds-shell > .btn-group"];
+        anime({
+          targets: targets,
+          translateY: [24, 0],
+          opacity: [0, 1],
+          duration: 700,
+          delay: anime.stagger(90),
+          easing: "easeOutCubic",
+        });
+      }
+
+      function spinDemo() {
+        if (reduceMotion) return;
+        spinTimeline && spinTimeline.pause();
+        spinTimeline = anime.timeline({ easing: "easeInOutCubic" });
+        spinTimeline
+          .add({ targets: cube, rotate: 360, scale: [1, 1.12, 1], duration: 900 })
+          .add({ targets: cube, borderRadius: ["10px", "999px", "10px"], duration: 600 }, "-=300");
+      }
+
+      function countDemo() {
+        if (reduceMotion) return;
+        const start = parseInt(countEl.textContent, 10) || 0;
+        const obj = { value: start };
+        anime({
+          targets: obj,
+          value: 120,
+          duration: 1200,
+          easing: "easeOutExpo",
+          update: () => (countEl.textContent = Math.round(obj.value)),
+        });
+      }
+
+      document.querySelectorAll("[data-anime]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const kind = btn.dataset.anime;
+          if (kind === "replay") replayEntrance();
+          if (kind === "spin") spinDemo();
+          if (kind === "count") countDemo();
+        });
+      });
+
+      function runProgress() {
+        if (reduceMotion) {
+          progressEl.style.width = "100%";
+          return;
+        }
+        const obj = { value: 0 };
+        anime({
+          targets: obj,
+          value: 100,
+          duration: 2600,
+          easing: "easeInOutQuart",
+          update: () => (progressEl.style.width = obj.value + "%"),
+        });
+      }
+
+      /* ============================================================
+         入场揭示
+         ============================================================ */
+      const revealObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target;
+            revealObserver.unobserve(el);
+            if (reduceMotion) {
+              el.style.opacity = 1;
+              return;
+            }
+            anime({
+              targets: el,
+              opacity: [0, 1],
+              translateY: [26, 0],
+              duration: 720,
+              easing: "easeOutCubic",
+            });
+          });
+        },
+        { threshold: 0.12 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => revealObserver.observe(el));
+
+      // 初始执行
+      replayEntrance();
+      runProgress();
+    </script>
+  </body>
+</html>

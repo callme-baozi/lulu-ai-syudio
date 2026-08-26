@@ -1,0 +1,121 @@
+/* ============================================================================
+   LULU AI STUDIO — DESIGN TOKENS
+   ----------------------------------------------------------------------------
+   设计语言唯一事实来源。所有组件必须只引用这里的令牌，禁止散落魔数。
+   体系：碳黑电影放映室 × 银色液态玻璃（严格灰度，真实影像负责提供颜色）。
+   修改任何一个令牌，全站组件同步生效。
+   ============================================================================ */
+
+:root {
+  color-scheme: dark;
+
+  /* ---------- 颜色 · 表面层级（由暗到亮） ---------- */
+  --color-bg: hsl(0 0% 3%);                /* 页面底色 碳黑 #08090a */
+  --color-bg-elevated: hsl(0 0% 5%);       /* 比底色略亮的舞台区 */
+  --color-surface: hsl(0 0% 7%);           /* 常规卡片表面 */
+  --color-surface-raised: hsl(0 0% 10%);   /* 抬升表面：可点按、激活 */
+  --color-surface-glass: hsl(0 0% 100% / 0.05);   /* 液态玻璃·弱 */
+  --color-surface-glass-strong: hsl(0 0% 100% / 0.09); /* 液态玻璃·强 */
+  --color-overlay: hsl(0 0% 0% / 0.62);    /* 遮罩 */
+
+  /* ---------- 颜色 · 文字 ---------- */
+  --color-text: hsl(0 0% 95%);             /* 主文字 */
+  --color-text-secondary: hsl(0 0% 70%);   /* 次级文字 */
+  --color-text-tertiary: hsl(0 0% 50%);    /* 弱化文字 / 元信息 */
+  --color-text-on-accent: hsl(0 0% 4%);    /* 高亮底上的深色文字 */
+
+  /* ---------- 颜色 · 线条（粗细统一见下方 --line-*） ---------- */
+  --color-line: hsl(0 0% 100% / 0.1);      /* 分隔细线 / 卡片描边 */
+  --color-line-strong: hsl(0 0% 100% / 0.22); /* 强调描边 / hover */
+  --color-line-focus: hsl(0 0% 100%);      /* 键盘焦点 / 激活描边 */
+
+  /* ---------- 颜色 · 高光（液态玻璃与鼠标追踪光效共用） ---------- */
+  --color-glass-highlight: hsl(0 0% 100% / 0.9);   /* 描边高光 */
+  --color-glass-glow: hsl(0 0% 100% / 0.28);       /* 泛光 */
+  --color-cursor-halo: hsl(0 0% 100% / 0.07);      /* 全局鼠标光晕 */
+
+  /* ---------- 字体 ---------- */
+  --font-display: "Poppins", "PingFang SC", "Microsoft YaHei", "Segoe UI Variable", sans-serif;
+  --font-body: "Poppins", "PingFang SC", "Microsoft YaHei", "Segoe UI Variable", sans-serif;
+  --font-mono: "SFMono-Regular", "Cascadia Code", "Consolas", monospace;
+
+  /* ---------- 字号阶梯（大字号用 fluid，小字号用固定） ---------- */
+  --text-display: clamp(2.6rem, 6vw, 5.2rem);   /* Hero / 品牌宣言 */
+  --text-h1: clamp(2.2rem, 4.2vw, 3.6rem);      /* 区块主标题 */
+  --text-h2: clamp(1.7rem, 3vw, 2.4rem);        /* 子区块标题 */
+  --text-h3: 1.3rem;                            /* 卡片标题 */
+  --text-lead: 1.125rem;                        /* 引言 / 导语 */
+  --text-body: 1rem;                            /* 正文 */
+  --text-sm: 0.875rem;                          /* 辅助正文 */
+  --text-xs: 0.75rem;                           /* 说明 */
+  --text-micro: 0.6875rem;                      /* 标签 / 元信息 / 品牌后缀 */
+
+  /* ---------- 字重 ---------- */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* ---------- 圆角 ---------- */
+  --radius-card: 12px;          /* 大卡片（作品轮播、特性卡） */
+  --radius-panel: 10px;         /* 面板 / 信息块 / 分组容器 */
+  --radius-inner: 6px;          /* 卡片内嵌元素（缩略图、图标位） */
+  --radius-control: 999px;      /* 胶囊控件：按钮 / 标签 / 开关 / 输入 */
+
+  /* ---------- 线条粗细 ---------- */
+  --line-hairline: 1px;         /* 常规描边与分隔线 */
+  --line-focus: 2px;            /* 焦点 / 激活描边 */
+
+  /* ---------- 间距（4pt 网格） ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* ---------- 缝隙与内边距（组件关系） ---------- */
+  --gap-grid: var(--space-4);            /* 组件之间标准缝隙 */
+  --gap-grid-tight: var(--space-3);      /* 紧凑缝隙（按钮组） */
+  --gap-list: var(--space-2);            /* 列表项 / 标签缝隙 */
+  --pad-card: var(--space-6);            /* 卡片内边距 */
+  --pad-panel: var(--space-5);           /* 面板内边距 */
+  --pad-section-x: clamp(18px, 4vw, 32px); /* 页面左右留白 */
+  --section-y: clamp(72px, 10vw, 128px);  /* 区块上下间距 */
+
+  /* ---------- 控件尺寸 ---------- */
+  --control-height: 46px;        /* 按钮 / 输入框标准高度 */
+  --control-height-sm: 38px;     /* 紧凑控件高度 */
+  --control-pad-x: var(--space-5);   /* 按钮水平内边距 */
+  --control-pad-x-sm: var(--space-4); /* 紧凑按钮水平内边距 */
+  --control-gap: var(--space-2);      /* 相邻按钮缝隙 */
+
+  /* ---------- 动效 ---------- */
+  --dur-fast: 160ms;             /* hover 即时反馈 */
+  --dur-base: 260ms;             /* 通用过渡 */
+  --dur-slow: 600ms;             /* 入场 / 大面积位移 */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);   /* 出场减速 */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---------- 布局 ---------- */
+  --shell: 1440px;               /* 内容最大宽度 */
+  --header-height: 72px;
+
+  /* ---------- 液态玻璃参数 ---------- */
+  --glass-blur: 16px;            /* 背景模糊半径 */
+  --glass-saturate: 140%;
+  --glass-edge-alpha: 0.14;      /* 顶部内高光线 */
+}
+
+/* 降透明度环境：关闭毛玻璃，退回不透明近黑表面 */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --color-surface-glass: hsl(0 0% 6%);
+    --color-surface-glass-strong: hsl(0 0% 8%);
+    --glass-blur: 0px;
+  }
+}

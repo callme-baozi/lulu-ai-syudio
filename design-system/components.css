@@ -1,0 +1,648 @@
+/* ============================================================================
+   LULU AI STUDIO — COMPONENTS
+   ----------------------------------------------------------------------------
+   全部组件基于 tokens.css，只引用令牌，不写死魔数。
+   覆盖：液态玻璃、卡片、按钮、标签、输入、开关、进度、面板、
+        BorderGlow 描边光、Spotlight 聚光、全局鼠标光晕、相邻联动。
+   ============================================================================ */
+
+/* ---------- 基础 ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--color-text);
+  background: var(--color-bg);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: var(--weight-regular);
+  letter-spacing: 0;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: var(--line-focus) solid var(--color-line-focus);
+  outline-offset: 3px;
+}
+
+/* ============================================================================
+   液态玻璃 (Liquid Glass)
+   保留原有"透明流动"材质：背景模糊 + 半透明表面 + 顶部内高光 + 细描边。
+   ============================================================================ */
+.glass {
+  background: var(--color-surface-glass);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  border: var(--line-hairline) solid var(--color-line);
+  box-shadow:
+    inset 0 1px 0 var(--color-glass-highlight) /* 顶部内高光，形成"流动"边缘 */,
+    inset 0 0 0 1px hsl(0 0% 100% / 0.02);
+}
+
+.glass-strong {
+  background: var(--color-surface-glass-strong);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.6)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(calc(var(--glass-blur) * 1.6)) saturate(var(--glass-saturate));
+  border: var(--line-hairline) solid var(--color-line-strong);
+  box-shadow:
+    inset 0 1px 0 var(--color-glass-highlight),
+    inset 0 0 22px hsl(0 0% 100% / 0.04);
+}
+
+/* ============================================================================
+   卡片 (Card)
+   三种表面 + 一种玻璃表面，圆角统一 --radius-card，内边距统一 --pad-card。
+   ============================================================================ */
+.card {
+  position: relative;
+  border-radius: var(--radius-card);
+  padding: var(--pad-card);
+  border: var(--line-hairline) solid var(--color-line);
+  background: var(--color-surface);
+  box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.04);
+}
+
+.card--raised {
+  background: var(--color-surface-raised);
+  box-shadow:
+    inset 0 1px 0 hsl(0 0% 100% / 0.07),
+    0 24px 60px -40px hsl(0 0% 0% / 0.8);
+}
+
+.card--glass {
+  background: var(--color-surface-glass);
+  border-color: var(--color-line);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+}
+
+.card__title {
+  margin: 0 0 var(--space-2);
+  color: var(--color-text);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+}
+
+.card__meta {
+  margin: 0;
+  color: var(--color-text-tertiary);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.card__desc {
+  margin: var(--space-3) 0 0;
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  line-height: 1.65;
+}
+
+/* ============================================================================
+   按钮 (Button)
+   统一高度 --control-height、水平内边距 --control-pad-x、胶囊圆角。
+   主要 / 次要 / 玻璃 / 紧凑 四种变体。
+   ============================================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--control-height);
+  padding: 0 var(--control-pad-x);
+  border-radius: var(--radius-control);
+  border: var(--line-hairline) solid transparent;
+  color: var(--color-text);
+  background: var(--color-surface-raised);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  user-select: none;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  background: var(--color-surface-raised);
+  border-color: var(--color-line-strong);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.btn--primary {
+  color: var(--color-text-on-accent);
+  background: var(--color-text);
+}
+
+.btn--primary:hover {
+  background: hsl(0 0% 100% / 0.86);
+  border-color: transparent;
+  box-shadow: 0 10px 28px -14px hsl(0 0% 100% / 0.4);
+}
+
+.btn--quiet {
+  color: var(--color-text-secondary);
+  background: transparent;
+  border-color: var(--color-line);
+}
+
+.btn--quiet:hover {
+  color: var(--color-text);
+  border-color: var(--color-line-strong);
+  background: hsl(0 0% 100% / 0.04);
+}
+
+.btn--glass {
+  color: hsl(0 0% 100% / 0.86);
+  background: var(--color-surface-glass);
+  border-color: var(--color-line);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+}
+
+.btn--glass:hover {
+  background: var(--color-surface-glass-strong);
+  border-color: var(--color-line-strong);
+  box-shadow: inset 0 1px 0 var(--color-glass-highlight);
+}
+
+.btn--sm {
+  min-height: var(--control-height-sm);
+  padding: 0 var(--control-pad-x-sm);
+  font-size: var(--text-xs);
+}
+
+/* 按钮组：相邻按钮缝隙统一 --control-gap */
+.btn-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--control-gap);
+  align-items: center;
+}
+
+/* ============================================================================
+   标签 (Tag / Pill)
+   胶囊形状，弱玻璃底，用于分类与状态。
+   ============================================================================ */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 32px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-control);
+  border: var(--line-hairline) solid var(--color-line);
+  color: var(--color-text-secondary);
+  background: var(--color-surface-glass);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.tag--active {
+  color: var(--color-text-on-accent);
+  background: var(--color-text);
+  border-color: transparent;
+}
+
+.tag--strong {
+  color: var(--color-text);
+  background: var(--color-surface-glass-strong);
+  border-color: var(--color-line-strong);
+}
+
+/* 标签组缝隙 --gap-list */
+.tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-list);
+}
+
+/* ============================================================================
+   输入框 (Field)
+   高度与按钮一致 --control-height，圆角 --radius-panel，聚焦用 --color-line-focus。
+   ============================================================================ */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.field label {
+  color: var(--color-text-secondary);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+}
+
+.input {
+  width: 100%;
+  min-height: var(--control-height);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-panel);
+  border: var(--line-hairline) solid var(--color-line);
+  color: var(--color-text);
+  background: var(--color-surface);
+  font: inherit;
+  font-size: var(--text-sm);
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.input:hover {
+  border-color: var(--color-line-strong);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-line-focus);
+  box-shadow: 0 0 0 3px hsl(0 0% 100% / 0.1);
+}
+
+/* ============================================================================
+   开关 (Switch)
+   ============================================================================ */
+.switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  user-select: none;
+}
+
+.switch input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch__track {
+  position: relative;
+  width: 44px;
+  height: 26px;
+  border-radius: var(--radius-control);
+  border: var(--line-hairline) solid var(--color-line-strong);
+  background: var(--color-surface);
+  transition: background var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out);
+}
+
+.switch__track::after {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-control);
+  background: var(--color-text-secondary);
+  content: "";
+  transition: transform var(--dur-base) var(--ease-out), background var(--dur-base) var(--ease-out);
+}
+
+.switch input:checked + .switch__track {
+  border-color: var(--color-line-focus);
+  background: var(--color-text);
+}
+
+.switch input:checked + .switch__track::after {
+  background: var(--color-text-on-accent);
+  transform: translateX(18px);
+}
+
+.switch input:focus-visible + .switch__track {
+  outline: var(--line-focus) solid var(--color-line-focus);
+  outline-offset: 3px;
+}
+
+.switch__label {
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+}
+
+/* ============================================================================
+   进度条 (Progress)
+   ============================================================================ */
+.progress {
+  height: 6px;
+  border-radius: var(--radius-control);
+  background: var(--color-surface-raised);
+  overflow: hidden;
+}
+
+.progress__bar {
+  height: 100%;
+  width: 0;
+  border-radius: var(--radius-control);
+  background: var(--color-text);
+  transform-origin: left center;
+}
+
+/* ============================================================================
+   面板 (Panel) — 分组容器
+   ============================================================================ */
+.panel {
+  border-radius: var(--radius-panel);
+  padding: var(--pad-panel);
+  border: var(--line-hairline) solid var(--color-line);
+  background: var(--color-surface);
+}
+
+.panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: var(--line-hairline) solid var(--color-line);
+  margin-bottom: var(--space-4);
+}
+
+.panel__title {
+  margin: 0;
+  color: var(--color-text);
+  font-size: var(--text-h3);
+  font-weight: var(--weight-semibold);
+}
+
+/* ============================================================================
+   网格缝隙 (Grid)
+   组件之间的标准缝隙统一为 --gap-grid，区块间距 --section-y。
+   ============================================================================ */
+.grid {
+  display: grid;
+  gap: var(--gap-grid);
+}
+
+.grid--tight {
+  gap: var(--gap-grid-tight);
+}
+
+.section {
+  padding-top: var(--section-y);
+  padding-bottom: var(--section-y);
+}
+
+/* ============================================================================
+   BorderGlow 描边光
+   保留原有"鼠标追踪的流动描边"效果：conic-gradient 随指针角度旋转，
+   靠近边缘时高光强度提升。
+   ============================================================================ */
+.glow-frame {
+  --edge-proximity: 0;
+  --cursor-angle: 90deg;
+  --edge-sensitivity: 26;
+  --glow-padding: 26px;
+  position: relative;
+  isolation: isolate;
+  border-radius: var(--radius-card);
+  border: var(--line-hairline) solid var(--color-line);
+  background: hsl(0 0% 4% / 0.4);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow:
+    inset 0 1px 0 var(--color-glass-highlight),
+    0 24px 70px -48px hsl(0 0% 0% / 0.86);
+  transform: translate3d(0, 0, 0.01px);
+}
+
+.glow-frame::before,
+.glow-frame::after,
+.glow-frame > .edge-light {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+  transition: opacity var(--dur-fast) var(--ease-out);
+}
+
+.glow-frame::before {
+  border: var(--line-hairline) solid transparent;
+  background:
+    linear-gradient(hsl(0 0% 4% / 0.72), hsl(0 0% 4% / 0.72)) padding-box,
+    conic-gradient(
+      from var(--cursor-angle),
+      transparent 0 24%,
+      hsl(0 0% 100% / 0.08) 31%,
+      hsl(0 0% 100% / 0.9) 40%,
+      hsl(0 0% 100% / 0.16) 48%,
+      transparent 58% 100%
+    ) border-box;
+  opacity: calc(0.18 + (var(--edge-alpha, 0) * 0.82));
+}
+
+.glow-frame::after {
+  inset: -14px;
+  background: conic-gradient(
+    from var(--cursor-angle),
+    transparent 0 30%,
+    hsl(0 0% 100% / 0.1) 42%,
+    transparent 55% 100%
+  );
+  filter: blur(18px);
+  opacity: calc(var(--edge-alpha, 0) * 0.68);
+  mix-blend-mode: screen;
+}
+
+.glow-frame > .edge-light {
+  inset: calc(var(--glow-padding) * -1);
+  z-index: 2;
+  opacity: var(--edge-alpha, 0);
+  mix-blend-mode: screen;
+}
+
+.glow-frame > .edge-light::before {
+  position: absolute;
+  inset: var(--glow-padding);
+  border-radius: inherit;
+  content: "";
+  box-shadow:
+    inset 0 0 0 1px hsl(0 0% 100% / 0.9),
+    inset 0 0 8px hsl(0 0% 100% / 0.28),
+    inset 0 0 22px hsl(0 0% 100% / 0.14),
+    0 0 14px hsl(0 0% 100% / 0.22),
+    0 0 36px hsl(0 0% 100% / 0.1);
+}
+
+/* ============================================================================
+   Spotlight 聚光
+   保留原有"径向聚光跟随指针"效果，用于可点按卡片。
+   ============================================================================ */
+.spotlight {
+  --spotlight-x: 50%;
+  --spotlight-y: 42%;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+
+.spotlight > * {
+  position: relative;
+  z-index: 1;
+}
+
+.spotlight::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  content: "";
+  background: radial-gradient(
+    circle at var(--spotlight-x) var(--spotlight-y),
+    hsl(0 0% 100% / 0.12),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity var(--dur-fast) var(--ease-out);
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.spotlight::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  content: "";
+  border: var(--line-hairline) solid hsl(0 0% 100% / 0.06);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.spotlight:hover,
+.spotlight:focus-within {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1px 0 var(--color-glass-highlight),
+    0 18px 44px -28px hsl(0 0% 0% / 0.8);
+}
+
+.spotlight:hover::before,
+.spotlight:focus-within::before {
+  opacity: 1;
+}
+
+/* ============================================================================
+   全局鼠标光晕 (Cursor Halo)
+   半透明圆，跟随指针，用 transform 位移；不参与布局、不阻断点击。
+   所有组件共享同一个光晕，实现鼠标在组件之间移动的"连贯跟随"。
+   ============================================================================ */
+.cursor-halo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 360px;
+  height: 360px;
+  margin: -180px 0 0 -180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-cursor-halo) 0%, transparent 62%);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+  transition: opacity var(--dur-slow) var(--ease-out);
+}
+
+body.halo-on .cursor-halo {
+  opacity: 1;
+}
+
+/* ============================================================================
+   相邻组件联动
+   当指针进入一个分组时，组内"非悬停"成员轻微退让（下压 + 变暗），
+   让鼠标移动在相邻组件之间有连贯的递进反馈。
+   ============================================================================ */
+.hover-chain {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap-grid);
+}
+
+.hover-chain .card,
+.hover-chain .btn,
+.hover-chain .tag {
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    opacity var(--dur-base) var(--ease-out),
+    filter var(--dur-base) var(--ease-out),
+    background var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.hover-chain:hover .card:not(:hover),
+.hover-chain:hover .btn:not(:hover),
+.hover-chain:hover .tag:not(:hover) {
+  transform: translateY(2px) scale(0.985);
+  opacity: 0.62;
+  filter: saturate(0.7);
+}
+
+.hover-chain .card:hover,
+.hover-chain .btn:hover,
+.hover-chain .tag:hover {
+  transform: translateY(-3px);
+  opacity: 1;
+  filter: none;
+}
+
+/* ============================================================================
+   入场 Reveal（配合 Anime.js 使用）
+   ============================================================================ */
+.reveal {
+  opacity: 0;
+}
+
+/* ============================================================================
+   动效偏好
+   ============================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
+  .cursor-halo {
+    display: none;
+  }
+}

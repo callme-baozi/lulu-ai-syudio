@@ -78,7 +78,7 @@ const projects = [
     focus: "产品信息与平台节奏的平衡",
     highlights: ["快速建立产品使用场景", "以镜头承接核心卖点", "适配移动端内容节奏"],
     media: "https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/%E6%8A%96%E9%9F%B3%E7%9F%AD%E8%A7%86%E9%A2%91/%E6%8A%96%E9%9F%B3%E7%9F%AD%E8%A7%86%E9%A2%91_%E5%90%B9%E9%A3%8E%E6%9C%BA_%E4%BA%A7%E5%93%81%E7%A7%8D%E8%8D%89%E7%9F%AD%E7%89%87_.mp4",
-    poster: "https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/%E6%8A%96%E9%9F%B3%E7%9F%AD%E8%A7%86%E9%A2%91/%E6%8A%96%E9%9F%B3%E7%9F%AD%E8%A7%86%E9%A2%91_%E5%90%B9%E9%A3%8E%E6%9C%BA_%E4%BA%A7%E5%93%81%E7%A7%8D%E8%8D%89%E7%9F%AD%E7%89%87_%E5%B0%81%E9%9D%A2.png",
+    poster: "https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/%E6%8A%96%E9%9F%B3%E7%9F%AD%E8%A7%86%E9%A2%91/%E6%8A%96%E9%9F%B3%E7%9F%AD%E8%A7%86%E9%A2%91_%E5%90%B9%E9%A3%8E%E6%9C%BA_%E4%BA%A7%E5%93%81%E7%A7%8D%E8%8D%89%E7%9F%AD%E7%89%87_%E5%B0%81%E9%9D%A2.png?x-oss-process=image/resize,w_900",
     layout: "portrait",
   },
   {
@@ -294,7 +294,6 @@ function projectModule(project, index, total) {
     ' aria-hidden="true"><source src="',
     escapeAttr(project.media),
     '" type="video/mp4" /></video>',
-    '<span class="work-module__play" aria-hidden="true"></span>',
     "</div>",
     '<div class="work-module__copy glow-card">',
     '<div class="work-module__meta"><span>',
@@ -400,6 +399,29 @@ function scrollToModule(slug) {
   target.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
 }
 
+/* 竖版媒体适配：检测视频为竖版（高>宽）时给容器加 is-portrait，
+   封面/视频以 contain 完整显示（高度与其他作品一致，宽度按自身比例） */
+function markPortraitMedia(mediaEl) {
+  const video = mediaEl.querySelector("video");
+  if (!video) return;
+  const apply = () => {
+    if (video.videoWidth && video.videoHeight && video.videoHeight > video.videoWidth) {
+      mediaEl.classList.add("is-portrait");
+    }
+  };
+  if (video.readyState >= 1 && video.videoWidth) {
+    apply();
+    return;
+  }
+  ["loadedmetadata", "loadeddata", "canplay"].forEach((type) =>
+    video.addEventListener(type, apply, { once: true }),
+  );
+  // 兜底：元数据加载可能延迟，稍后补查
+  window.setTimeout(() => {
+    if (!mediaEl.classList.contains("is-portrait")) apply();
+  }, 1200);
+}
+
 function renderProjects(filter = "all") {
   const visible = filter === "all" ? orderedProjects : orderedProjects.filter((project) => project.category === filter);
 
@@ -437,6 +459,8 @@ function renderModules(filter = "all") {
     visible.map((project, index) => projectModule(project, index, total)).join(""),
     "</div>",
   ].join("");
+
+  workModules.querySelectorAll(".work-module").forEach((module) => markPortraitMedia(module));
 
   workModules.querySelectorAll("[data-open-video]").forEach((button) => {
     button.addEventListener("click", () => openProject(button.dataset.openVideo));
@@ -630,6 +654,8 @@ function initializeDepthCarousel(root, items) {
     if (items.length < 2 || reduceMotion.matches || paused || !inView) return;
     autoplayTimer = window.setInterval(() => navigate(1), 5200);
   }
+
+  cards.forEach((card) => markPortraitMedia(card));
 
   cards.forEach((card, index) => {
     const video = videos[index];

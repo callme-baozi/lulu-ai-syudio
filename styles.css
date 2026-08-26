@@ -849,6 +849,12 @@ p {
   object-fit: cover;
 }
 
+/* 竖版封面：轮播卡片内按自身比例完整显示，居中 */
+.depth-carousel__card.is-portrait .depth-carousel__media {
+  object-fit: contain;
+  object-position: center;
+}
+
 .depth-carousel__tint {
   position: absolute;
   inset: 0;
@@ -980,34 +986,20 @@ p {
   object-fit: cover;
 }
 
-.work-module__play {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  pointer-events: none;
+/* 竖版封面/视频：媒体区收窄为 9:16 竖版比例（高度与其他作品一致，宽度按自身宽高比），
+   封面完整显示、居中，避免在横向大框里留大片黑边 */
+.work-module.is-portrait .work-module__media {
+  justify-self: center;
+  width: auto;
+  max-width: 100%;
+  aspect-ratio: 9 / 16;
+  min-height: 560px;
+  transform: scale(0.5);
 }
 
-.work-module__play::after {
-  content: "";
-  width: 64px;
-  height: 64px;
-  border-radius: var(--radius-control);
-  background: hsl(0 0% 3% / 0.55);
-  border: var(--line-hairline) solid var(--color-line-strong);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-}
-
-.work-module__play::before {
-  content: "";
-  z-index: 1;
-  width: 0;
-  height: 0;
-  margin-left: 6px;
-  border-top: 11px solid transparent;
-  border-bottom: 11px solid transparent;
-  border-left: 16px solid var(--color-text);
+.work-module.is-portrait .work-module__video {
+  object-fit: contain;
+  object-position: center;
 }
 
 .work-module__copy {

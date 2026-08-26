@@ -202,8 +202,15 @@ function escapeAttr(value) {
 
 function projectSlide(project, index, count) {
   const poster = project.poster ? ' poster="' + escapeAttr(project.poster) + '"' : "";
+  const isPortrait = project.layout === "portrait" && !!project.poster;
+  const backdrop =
+    isPortrait && project.poster
+      ? '<img class="depth-carousel__backdrop" src="' + escapeAttr(project.poster) + '" alt="" aria-hidden="true" />'
+      : "";
   return [
-    '<button class="depth-carousel__card" type="button" data-carousel-card data-index="',
+    '<button class="depth-carousel__card',
+    isPortrait ? " is-portrait" : "",
+    '" type="button" data-carousel-card data-index="',
     index,
     '" data-slug="',
     project.slug,
@@ -214,6 +221,7 @@ function projectSlide(project, index, count) {
     "，",
     project.title,
     '">',
+    backdrop,
     '<video class="depth-carousel__media" muted playsinline preload="metadata"',
     poster,
     ' aria-hidden="true"><source src="',
@@ -279,16 +287,23 @@ function carouselMarkup(items) {
 function projectModule(project, index, total) {
   const flip = index % 2 === 1 ? " work-module--flip" : "";
   const poster = project.poster ? ' poster="' + escapeAttr(project.poster) + '"' : "";
+  const isPortrait = project.layout === "portrait" && !!project.poster;
   const num = String(index + 1).padStart(2, "0");
+  const backdrop =
+    isPortrait && project.poster
+      ? '<img class="work-module__backdrop" src="' + escapeAttr(project.poster) + '" alt="" aria-hidden="true" />'
+      : "";
   return [
     '<article class="work-module reveal',
     flip,
+    isPortrait ? " is-portrait" : "",
     '" id="module-',
     project.slug,
     '" aria-labelledby="moduleTitle-',
     project.slug,
     '">',
     '<div class="work-module__media">',
+    backdrop,
     '<video class="work-module__video" muted playsinline preload="metadata"',
     poster,
     ' aria-hidden="true"><source src="',
@@ -399,29 +414,6 @@ function scrollToModule(slug) {
   target.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
 }
 
-/* 竖版媒体适配：检测视频为竖版（高>宽）时给容器加 is-portrait，
-   封面/视频以 contain 完整显示（高度与其他作品一致，宽度按自身比例） */
-function markPortraitMedia(mediaEl) {
-  const video = mediaEl.querySelector("video");
-  if (!video) return;
-  const apply = () => {
-    if (video.videoWidth && video.videoHeight && video.videoHeight > video.videoWidth) {
-      mediaEl.classList.add("is-portrait");
-    }
-  };
-  if (video.readyState >= 1 && video.videoWidth) {
-    apply();
-    return;
-  }
-  ["loadedmetadata", "loadeddata", "canplay"].forEach((type) =>
-    video.addEventListener(type, apply, { once: true }),
-  );
-  // 兜底：元数据加载可能延迟，稍后补查
-  window.setTimeout(() => {
-    if (!mediaEl.classList.contains("is-portrait")) apply();
-  }, 1200);
-}
-
 function renderProjects(filter = "all") {
   const visible = filter === "all" ? orderedProjects : orderedProjects.filter((project) => project.category === filter);
 
@@ -459,8 +451,6 @@ function renderModules(filter = "all") {
     visible.map((project, index) => projectModule(project, index, total)).join(""),
     "</div>",
   ].join("");
-
-  workModules.querySelectorAll(".work-module").forEach((module) => markPortraitMedia(module));
 
   workModules.querySelectorAll("[data-open-video]").forEach((button) => {
     button.addEventListener("click", () => openProject(button.dataset.openVideo));
@@ -654,8 +644,6 @@ function initializeDepthCarousel(root, items) {
     if (items.length < 2 || reduceMotion.matches || paused || !inView) return;
     autoplayTimer = window.setInterval(() => navigate(1), 5200);
   }
-
-  cards.forEach((card) => markPortraitMedia(card));
 
   cards.forEach((card, index) => {
     const video = videos[index];

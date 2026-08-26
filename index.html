@@ -17,7 +17,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./design-system/tokens.css?v=6" />
-    <link rel="stylesheet" href="./styles.css?v=21" />
+    <link rel="stylesheet" href="./styles.css?v=22" />
   </head>
   <body>
     <div class="cursor-halo" id="cursorHalo" aria-hidden="true"></div>
@@ -192,10 +192,13 @@
         </div>
 
         <figure class="about-media reveal">
-          <video muted loop playsinline preload="none" data-autoplay-in-view>
-            <source src="https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/AI%E7%9F%AD%E5%89%A7/AI%E7%9F%AD%E5%89%A7_%E5%93%AD%E5%8C%85%E4%BA%BA%E9%B1%BC_%E6%8D%A1%E6%BC%8F%E6%81%8B%E7%88%B1%E7%9F%AD%E5%89%A7_99s.mp4" type="video/mp4" />
-            <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260723_145606_ab143199-b593-4941-bb1b-9afca215416b.mp4" type="video/mp4" />
-          </video>
+          <span class="about-media__placeholder" aria-hidden="true">肖像照待补充</span>
+          <img
+            class="about-portrait"
+            src="./assets/images/portrait.jpg"
+            alt="创作者肖像"
+            onerror="this.classList.add('is-missing')"
+          />
         </figure>
       </section>
 

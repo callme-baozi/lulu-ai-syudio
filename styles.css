@@ -1156,19 +1156,39 @@ p {
 }
 
 .about-media {
+  position: relative;
   padding: var(--space-3);
   border: var(--line-hairline) solid var(--color-line);
   border-radius: var(--radius-card);
   background: var(--color-surface);
 }
 
-.about-media video {
-  display: block;
+/* 肖像占位层：4:5 竖幅，虚线占位，照片就绪后自动被覆盖 */
+.about-media__placeholder {
+  display: grid;
+  place-items: center;
   width: 100%;
   aspect-ratio: 4 / 5;
   border-radius: var(--radius-panel);
+  border: var(--line-hairline) dashed var(--color-line-strong);
+  background: linear-gradient(160deg, hsl(0 0% 11%), hsl(0 0% 6%));
+  color: var(--color-text-tertiary);
+  font-size: var(--text-sm);
+  letter-spacing: 0.14em;
+}
+
+/* 肖像照：绝对定位覆盖占位层，保持原视频卡的 4:5 竖幅与灰度风格 */
+.about-portrait {
+  position: absolute;
+  inset: var(--space-3);
+  z-index: 1;
+  border-radius: var(--radius-panel);
   object-fit: cover;
   filter: grayscale(0.45) contrast(1.08);
+}
+
+.about-portrait.is-missing {
+  display: none;
 }
 
 /* ============================================================================
@@ -1771,7 +1791,7 @@ body.halo-on .cursor-halo {
     margin-left: auto;
   }
 
-  .about-media video {
+  .about-media__placeholder {
     aspect-ratio: 16 / 10;
   }
 }
@@ -1957,7 +1977,7 @@ body.halo-on .cursor-halo {
     width: 100%;
   }
 
-  .about-media video {
+  .about-media__placeholder {
     aspect-ratio: 4 / 5;
   }
 

@@ -17,7 +17,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./design-system/tokens.css?v=6" />
-    <link rel="stylesheet" href="./styles.css?v=9" />
+    <link rel="stylesheet" href="./styles.css?v=12" />
     <link rel="preload" as="image" href="https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/AI%20TVC%E5%B9%BF%E5%91%8A/AI_TVC%E5%B9%BF%E5%91%8A%E5%B0%81%E9%9D%A2.jpg" fetchpriority="high" />
   </head>
   <body>
@@ -153,9 +153,19 @@
         <div class="work-border-glow reveal" data-work-border-glow>
           <span class="edge-light" aria-hidden="true"></span>
           <div class="work-border-glow__inner">
+            <div class="filter-bar" id="projectFilters" aria-label="作品分类">
+              <button class="filter-button is-active" type="button" data-filter="all" aria-pressed="true">全部</button>
+              <button class="filter-button glow-chip" type="button" data-filter="ai-tvc" aria-pressed="false">AI TVC</button>
+              <button class="filter-button glow-chip" type="button" data-filter="ai-drama" aria-pressed="false">AI漫剧</button>
+              <button class="filter-button glow-chip" type="button" data-filter="tvc" aria-pressed="false">TVC广告</button>
+              <button class="filter-button glow-chip" type="button" data-filter="real-estate" aria-pressed="false">地产广告</button>
+              <button class="filter-button glow-chip" type="button" data-filter="douyin" aria-pressed="false">抖音短视频</button>
+              <button class="filter-button glow-chip" type="button" data-filter="sound" aria-pressed="false">音效设计</button>
+            </div>
             <div id="workGrid" aria-live="polite"></div>
           </div>
         </div>
+        <div class="work-showcase-region" id="workModules" aria-live="polite"></div>
         <noscript>
           <p class="empty-state">请启用 JavaScript 以浏览作品详情。</p>
         </noscript>
@@ -248,6 +258,6 @@
     </dialog>
 
     <script src="./assets/vendor/anime.min.js"></script>
-    <script src="./script.js?v=8"></script>
+    <script src="./script.js?v=10"></script>
   </body>
 </html>

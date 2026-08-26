@@ -144,6 +144,8 @@ const projects = [
 ];
 
 const workGrid = document.querySelector("#workGrid");
+const workModules = document.querySelector("#workModules");
+const filters = [...document.querySelectorAll(".filter-button")];
 const dialog = document.querySelector("#projectDialog");
 const dialogBody = document.querySelector("#dialogBody");
 const dialogClose = document.querySelector("#dialogClose");
@@ -154,6 +156,7 @@ const menuButton = document.querySelector("#menuButton");
 const siteNav = document.querySelector("#siteNav");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+let activeCarousel = null;
 
 function tweenValue({ start, end, duration, onUpdate, onComplete }) {
   let frame = null;
@@ -197,35 +200,79 @@ function escapeAttr(value) {
   return String(value).replace(/"/g, "&quot;");
 }
 
-function collectionCard(project, index, total) {
+function projectSlide(project, index, count) {
   const poster = project.poster ? ' poster="' + escapeAttr(project.poster) + '"' : "";
-  const num = String(index + 1).padStart(2, "0");
   return [
-    '<button class="work-collection__card" type="button" data-collection-card data-slug="',
+    '<button class="depth-carousel__card" type="button" data-carousel-card data-index="',
+    index,
+    '" data-slug="',
     project.slug,
-    '" aria-label="查看',
+    '" aria-label="',
+    index + 1,
+    " / ",
+    count,
+    "，",
     project.title,
-    '项目详情">',
-    '<span class="work-collection__cover">',
-    '<video class="work-collection__video" muted playsinline preload="metadata"',
+    '">',
+    '<video class="depth-carousel__media" muted playsinline preload="metadata"',
     poster,
     ' aria-hidden="true"><source src="',
     escapeAttr(project.media),
     '" type="video/mp4" /></video>',
-    '<span class="work-collection__index" aria-hidden="true">',
-    num,
-    "</span>",
-    "</span>",
-    '<span class="work-collection__body">',
-    '<span class="work-collection__type">',
-    project.type,
-    "</span>",
-    '<span class="work-collection__title">',
-    project.title,
-    "</span>",
-    '<span class="work-collection__cta">查看项目详情</span>',
-    "</span>",
+    '<span class="depth-carousel__tint" aria-hidden="true"></span>',
+    '<span class="media-status" aria-hidden="true">Media unavailable</span>',
     "</button>",
+  ].join("");
+}
+
+function carouselMarkup(items) {
+  const arrows =
+    items.length > 1
+      ? [
+          '<button class="depth-carousel__arrow depth-carousel__arrow--prev glow-chip" type="button" data-carousel-prev aria-label="上一个项目">',
+          '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>',
+          "</button>",
+          '<button class="depth-carousel__arrow depth-carousel__arrow--next glow-chip" type="button" data-carousel-next aria-label="下一个项目">',
+          '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>',
+          "</button>",
+        ].join("")
+      : "";
+
+  const dots =
+    items.length > 1
+      ? items
+          .map(
+            (project, index) =>
+              '<button class="depth-carousel__dot' +
+              (index === 0 ? " is-active" : "") +
+              '" type="button" role="tab" data-carousel-dot data-index="' +
+              index +
+              '" aria-label="切换到' +
+              project.title +
+              '" aria-selected="' +
+              String(index === 0) +
+              '"></button>',
+          )
+          .join("")
+      : "";
+
+  return [
+    '<div class="work-showcase reveal">',
+    '<article class="work-info glow-card" aria-labelledby="activeProjectTitle">',
+    '<div class="work-info__meta"><span data-project-count></span><span data-project-type></span></div>',
+    '<h3 id="activeProjectTitle" data-project-title></h3>',
+    '<p data-project-intro></p>',
+    '<dl class="work-info__facts"><div><dt>Role</dt><dd data-project-role></dd></div><div><dt>Duration</dt><dd data-project-duration></dd></div></dl>',
+    '<button class="text-link" type="button" data-open-active>查看项目详情</button>',
+    "</article>",
+    '<div class="depth-carousel" data-depth-carousel role="group" aria-roledescription="carousel" aria-label="作品深度轮播" tabindex="0">',
+    '<div class="depth-carousel__stage">',
+    items.map((project, index) => projectSlide(project, index, items.length)).join(""),
+    "</div>",
+    arrows,
+    '<div class="depth-carousel__dots" role="tablist" aria-label="作品列表">',
+    dots,
+    "</div></div></div>",
   ].join("");
 }
 
@@ -272,7 +319,7 @@ function projectModule(project, index, total) {
     "</dd></div></dl>",
     '<button class="text-link" type="button" data-open-video="',
     project.slug,
-    '">查看作品</button>',
+    '">查看项目详情</button>',
     "</div>",
     "</article>",
   ].join("");
@@ -347,36 +394,375 @@ function initializeSectionEntrance() {
   observer.observe(section);
 }
 
-function renderWork() {
-  const total = orderedProjects.length;
-  workGrid.innerHTML = [
-    '<div class="work-collection reveal">',
-    '<div class="work-collection__head">',
-    "<h3>作品集合集</h3>",
-    "<p>视频仅展示封面；点击「查看项目详情」可快速跳转到下方对应作品模块。</p>",
-    "</div>",
-    '<div class="work-collection__grid">',
-    orderedProjects.map((project, index) => collectionCard(project, index, total)).join(""),
-    "</div>",
-    "</div>",
+function scrollToModule(slug) {
+  const target = document.getElementById("module-" + slug);
+  if (!target) return;
+  target.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
+}
+
+function renderProjects(filter = "all") {
+  const visible = filter === "all" ? orderedProjects : orderedProjects.filter((project) => project.category === filter);
+
+  activeCarousel?.destroy();
+  activeCarousel = null;
+
+  if (!visible.length) {
+    workGrid.innerHTML = '<p class="empty-state">该分类暂时没有可公开作品。</p>';
+    return;
+  }
+
+  workGrid.innerHTML = carouselMarkup(visible);
+  const carousels = [...workGrid.querySelectorAll("[data-depth-carousel]")]
+    .map((root) => initializeDepthCarousel(root, visible))
+    .filter(Boolean);
+  activeCarousel = {
+    pause() {
+      carousels.forEach((carousel) => carousel.pause());
+    },
+    resume() {
+      carousels.forEach((carousel) => carousel.resume());
+    },
+    destroy() {
+      carousels.forEach((carousel) => carousel.destroy());
+    },
+  };
+  revealElements(workGrid);
+}
+
+function renderModules(filter = "all") {
+  const visible = filter === "all" ? orderedProjects : orderedProjects.filter((project) => project.category === filter);
+  const total = visible.length;
+  workModules.innerHTML = [
     '<div class="work-modules">',
-    orderedProjects.map((project, index) => projectModule(project, index, total)).join(""),
+    visible.map((project, index) => projectModule(project, index, total)).join(""),
     "</div>",
   ].join("");
 
-  workGrid.querySelectorAll("[data-collection-card]").forEach((card) => {
-    card.addEventListener("click", () => {
-      const target = document.getElementById("module-" + card.dataset.slug);
-      if (!target) return;
-      target.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
-    });
-  });
-
-  workGrid.querySelectorAll("[data-open-video]").forEach((button) => {
+  workModules.querySelectorAll("[data-open-video]").forEach((button) => {
     button.addEventListener("click", () => openProject(button.dataset.openVideo));
   });
 
-  revealElements(workGrid);
+  revealElements(workModules);
+}
+
+function setFilter(filter) {
+  filters.forEach((button) => {
+    const active = button.dataset.filter === filter;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-pressed", String(active));
+  });
+  renderProjects(filter);
+  renderModules(filter);
+}
+
+function initializeDepthCarousel(root, items) {
+  const cards = [...root.querySelectorAll("[data-carousel-card]")];
+  const dots = [...root.querySelectorAll("[data-carousel-dot]")];
+  const videos = cards.map((card) => card.querySelector("video"));
+  const countLabel = workGrid.querySelector("[data-project-count]");
+  const typeLabel = workGrid.querySelector("[data-project-type]");
+  const title = workGrid.querySelector("[data-project-title]");
+  const intro = workGrid.querySelector("[data-project-intro]");
+  const role = workGrid.querySelector("[data-project-role]");
+  const duration = workGrid.querySelector("[data-project-duration]");
+  const openButton = workGrid.querySelector("[data-open-active]");
+  const previousButton = root.querySelector("[data-carousel-prev]");
+  const nextButton = root.querySelector("[data-carousel-next]");
+  let position = 0;
+  let activeIndex = 0;
+  let tween = null;
+  let wheelTimer = null;
+  let autoplayTimer = null;
+  let paused = false;
+  let inView = true;
+  let suppressClick = false;
+  let drag = null;
+  let dragFrame = null;
+
+  function config() {
+    const mobile = root.clientWidth < 720;
+    const cardWidth = cards[0]?.offsetWidth || 420;
+    return {
+      cardWidth,
+      depth: mobile ? 110 : 210,
+      spread: mobile ? 36 : 92,
+      tilt: mobile ? 5 : 10,
+      visibleCards: mobile ? 2 : 3,
+      falloff: mobile ? 0.28 : 0.23,
+      blur: mobile ? 2 : 5,
+    };
+  }
+
+  /* 合集轮播只展示封面：所有视频保持暂停，不自动播放 */
+  function updatePlayback() {
+    videos.forEach((video) => {
+      if (!video) return;
+      if (video.readyState === 0) video.load();
+      video.pause();
+    });
+  }
+
+  function updateInfo(index) {
+    const project = items[index];
+    if (!project) return;
+    activeIndex = index;
+    countLabel.textContent = String(index + 1).padStart(2, "0") + " / " + String(items.length).padStart(2, "0");
+    typeLabel.textContent = project.type;
+    title.textContent = project.title;
+    intro.textContent = project.intro;
+    role.textContent = project.role;
+    duration.textContent = project.duration;
+    cards.forEach((card, cardIndex) => {
+      const active = cardIndex === index;
+      card.classList.toggle("is-active", active);
+      card.setAttribute("aria-current", active ? "true" : "false");
+    });
+    dots.forEach((dot, dotIndex) => {
+      const active = dotIndex === index;
+      dot.classList.toggle("is-active", active);
+      dot.setAttribute("aria-selected", String(active));
+    });
+    updatePlayback();
+  }
+
+  function layout(value) {
+    const settings = config();
+    cards.forEach((card, index) => {
+      let distance = index - value;
+      if (items.length > 1) {
+        distance = ((distance % items.length) + items.length) % items.length;
+        if (distance > items.length / 2) distance -= items.length;
+      }
+      const behind = Math.max(0, distance);
+      const visible = Math.abs(distance) <= settings.visibleCards + 0.5;
+      const translateZ = -settings.depth * distance;
+      const translateX = settings.spread * distance;
+      const rotateY = settings.tilt * Math.min(Math.max(distance, 0), 1);
+      let opacity = distance < 0 ? Math.max(0, 1 + distance) : 1;
+      if (!visible) opacity = 0;
+      const brightness = Math.max(0.2, 1 - behind * settings.falloff);
+      const blur = Math.min(settings.blur, (behind / Math.max(1, settings.visibleCards)) * settings.blur);
+      card.style.transform =
+        "translate(-50%, -50%) translateX(" +
+        translateX.toFixed(2) +
+        "px) translateZ(" +
+        translateZ.toFixed(2) +
+        "px) rotateY(" +
+        rotateY.toFixed(2) +
+        "deg)";
+      card.style.opacity = opacity.toFixed(3);
+      card.style.filter = "brightness(" + brightness.toFixed(3) + ") blur(" + blur.toFixed(2) + "px)";
+      card.style.zIndex = String(Math.round(2000 - distance * 20));
+      card.style.pointerEvents = visible && opacity > 0.05 ? "auto" : "none";
+      const tint = card.querySelector(".depth-carousel__tint");
+      if (tint) tint.style.opacity = Math.min(behind * settings.falloff, 0.72).toFixed(3);
+    });
+  }
+
+  function tweenTo(target, animate = true) {
+    tween?.kill();
+    if (!animate || reduceMotion.matches) {
+      position = target;
+      layout(position);
+      return;
+    }
+    if (window.anime) {
+      const proxy = { position };
+      const anim = anime({
+        targets: proxy,
+        position: target,
+        duration: 700,
+        easing: "easeOutCubic",
+        update: () => {
+          position = proxy.position;
+          layout(position);
+        },
+        complete: () => {
+          position = ((position % items.length) + items.length) % items.length;
+          layout(position);
+        },
+      });
+      tween = {
+        kill() {
+          anim.pause();
+        },
+      };
+    } else {
+      tween = tweenValue({
+        start: position,
+        end: target,
+        duration: 700,
+        onUpdate: (value) => {
+          position = value;
+          layout(position);
+        },
+        onComplete: () => {
+          position = ((position % items.length) + items.length) % items.length;
+          layout(position);
+        },
+      });
+    }
+  }
+
+  function setFocus(rawIndex, animate = true) {
+    if (!items.length) return;
+    const index = ((rawIndex % items.length) + items.length) % items.length;
+    let delta = index - position;
+    if (items.length > 1) {
+      delta = ((delta % items.length) + items.length) % items.length;
+      if (delta > items.length / 2) delta -= items.length;
+    }
+    tweenTo(position + delta, animate);
+    updateInfo(index);
+  }
+
+  function navigate(step) {
+    setFocus(activeIndex + step, true);
+  }
+
+  function stopAutoplay() {
+    window.clearInterval(autoplayTimer);
+    autoplayTimer = null;
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    if (items.length < 2 || reduceMotion.matches || paused || !inView) return;
+    autoplayTimer = window.setInterval(() => navigate(1), 5200);
+  }
+
+  cards.forEach((card, index) => {
+    const video = videos[index];
+    const markReady = () => card.classList.add("is-ready");
+    const markError = () => card.classList.add("has-error");
+    video?.addEventListener("loadeddata", markReady, { once: true });
+    video?.addEventListener("error", markError, { once: true });
+    if (video?.readyState >= 2) markReady();
+    card.addEventListener("click", () => {
+      if (suppressClick) return;
+      if (index === activeIndex) scrollToModule(items[index].slug);
+      else setFocus(index, true);
+    });
+  });
+
+  dots.forEach((dot, index) => dot.addEventListener("click", () => setFocus(index, true)));
+  previousButton?.addEventListener("click", () => navigate(-1));
+  nextButton?.addEventListener("click", () => navigate(1));
+  openButton.addEventListener("click", () => scrollToModule(items[activeIndex].slug));
+
+  root.addEventListener("keydown", (event) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      navigate(-1);
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      navigate(1);
+    }
+  });
+
+  root.addEventListener(
+    "wheel",
+    (event) => {
+      if (items.length < 2) return;
+      const horizontalIntent = Math.abs(event.deltaX) > Math.abs(event.deltaY) || event.shiftKey;
+      if (!horizontalIntent) return;
+      event.preventDefault();
+      const delta = event.deltaX || event.deltaY;
+      position += Math.max(-0.55, Math.min(0.55, delta / Math.max(config().cardWidth * 0.9, 1)));
+      layout(position);
+      window.clearTimeout(wheelTimer);
+      wheelTimer = window.setTimeout(() => setFocus(Math.round(position), true), 130);
+    },
+    { passive: false },
+  );
+
+  root.addEventListener("pointerdown", (event) => {
+    if (items.length < 2 || event.target.closest("button:not([data-carousel-card])")) return;
+    tween?.kill();
+    drag = { startX: event.clientX, startPosition: position, id: event.pointerId, moved: false };
+  });
+
+  root.addEventListener("pointermove", (event) => {
+    if (!drag) return;
+    const delta = event.clientX - drag.startX;
+    if (!drag.moved && Math.abs(delta) > 5) {
+      drag.moved = true;
+      root.setPointerCapture(drag.id);
+    }
+    if (!drag.moved) return;
+    drag.delta = delta;
+    if (dragFrame) return;
+    dragFrame = window.requestAnimationFrame(() => {
+      dragFrame = null;
+      if (!drag) return;
+      position = drag.startPosition - drag.delta / Math.max(config().cardWidth * 0.62, 80);
+      layout(position);
+    });
+  });
+
+  function finishDrag() {
+    if (!drag) return;
+    if (dragFrame) {
+      window.cancelAnimationFrame(dragFrame);
+      dragFrame = null;
+    }
+    const moved = drag.moved;
+    drag = null;
+    if (!moved) return;
+    suppressClick = true;
+    window.setTimeout(() => {
+      suppressClick = false;
+    }, 80);
+    setFocus(Math.round(position), true);
+  }
+
+  root.addEventListener("pointerup", finishDrag);
+  root.addEventListener("pointercancel", finishDrag);
+  root.addEventListener("mouseenter", stopAutoplay);
+  root.addEventListener("mouseleave", startAutoplay);
+  root.addEventListener("focusin", stopAutoplay);
+  root.addEventListener("focusout", startAutoplay);
+
+  const resizeObserver = new ResizeObserver(() => layout(position));
+  const visibilityObserver = "IntersectionObserver" in window
+    ? new IntersectionObserver(([entry]) => {
+        inView = entry.isIntersecting;
+        if (inView) {
+          updatePlayback();
+          startAutoplay();
+        } else {
+          stopAutoplay();
+          updatePlayback();
+        }
+      }, { threshold: 0.08 })
+    : null;
+  resizeObserver.observe(root);
+  visibilityObserver?.observe(root);
+  updateInfo(0);
+  layout(0);
+  startAutoplay();
+
+  return {
+    pause() {
+      paused = true;
+      stopAutoplay();
+      updatePlayback();
+    },
+    resume() {
+      paused = false;
+      updatePlayback();
+      startAutoplay();
+    },
+    destroy() {
+      tween?.kill();
+      if (dragFrame) window.cancelAnimationFrame(dragFrame);
+      stopAutoplay();
+      window.clearTimeout(wheelTimer);
+      resizeObserver.disconnect();
+      visibilityObserver?.disconnect();
+      videos.forEach((video) => video?.pause());
+    },
+  };
 }
 
 function openProject(slug) {
@@ -405,6 +791,7 @@ function openProject(slug) {
   ].join("");
 
   heroVideo.pause();
+  activeCarousel?.pause();
   dialog.showModal();
   document.body.classList.add("dialog-open");
 }
@@ -441,6 +828,7 @@ dialog.addEventListener("click", (event) => {
 });
 dialog.addEventListener("close", () => {
   document.body.classList.remove("dialog-open");
+  activeCarousel?.resume();
   if (!document.hidden) heroVideo.play().catch(() => {});
 });
 
@@ -676,7 +1064,12 @@ initializeWorkBorderGlow();
 initializeHeroEntrance();
 initializeSectionEntrance();
 
-renderWork();
+filters.forEach((button) => {
+  button.addEventListener("click", () => setFilter(button.dataset.filter));
+});
+
+renderProjects();
+renderModules();
 initializeComponentGlow();
 revealElements();
 

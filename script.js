@@ -82,64 +82,52 @@ const projects = [
     layout: "portrait",
   },
   {
-    slug: "mstudioarts-fashion",
-    title: "MStudioArts 时尚艺术片",
-    type: "音效设计",
-    category: "sound",
-    duration: "76 sec",
-    intro: "用声音层次与节奏点强化时尚影像的身体感。",
+    slug: "ae-city-composite",
+    title: "城市合成 · 视觉包装",
+    type: "AE作品",
+    category: "ae",
+    duration: "28 sec",
+    intro: "基于AE完成城市场景的多层合成与视觉包装，构建未来感城市氛围。",
     detail:
-      "围绕画面运动、材质和剪辑节点设计声音，通过氛围、冲击与留白，让时尚艺术片获得更明确的空间和力度。",
-    role: "声音概念 / 音效设计 / 节奏包装",
-    focus: "声音与视觉动作的精确咬合",
-    highlights: ["建立材质化声音语言", "强化动作与转场节点", "保持时尚影像的留白"],
-    media: "./assets/videos/sound-mstudioarts-fashion-film.mp4",
+      "通过AE多层合成、光影调整、粒子叠加与动态图形包装，将城市素材加工为具有未来感的视觉场景，完成从素材到成片的全流程后期制作。",
+    role: "AE合成 / 视觉包装 / 动态图形",
+    focus: "多层合成与未来感视觉氛围",
+    highlights: ["城市场景多层合成与光影重塑", "粒子与动态图形视觉包装", "完成未来感成片输出"],
+    media: "https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/AE%E4%BD%9C%E5%93%81/2/%E5%9F%8E%E5%B8%82%E5%90%88%E6%88%90.mp4",
+    poster: "https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/AE%E4%BD%9C%E5%93%81/2/%E5%9F%8E%E5%B8%82%E5%90%88%E6%88%90%E5%B0%81%E9%9D%A2.jpg",
     layout: "wide",
   },
   {
-    slug: "lg-cinebeam",
-    title: "LG CineBeam 投影产品广告",
-    type: "音效设计",
-    category: "sound",
-    duration: "69 sec",
-    intro: "围绕空间体验构建科技产品的沉浸式声音。",
+    slug: "ae-e3d-title",
+    title: "E3D立体字 · 动态片头",
+    type: "AE作品",
+    category: "ae",
+    duration: "18 sec",
+    intro: "Element 3D三维立体字动画，配合镜头运动完成品牌片头演绎。",
     detail:
-      "以投影产品的空间体验为核心，让电子质感、环境声和场景变化共同服务产品的高级感与沉浸感。",
-    role: "音效设计 / 场景氛围 / 产品声音",
-    focus: "科技产品的空间化听觉体验",
-    highlights: ["设计克制的科技声音", "连接产品与空间变化", "保持广告级声音完成度"],
-    media: "./assets/videos/sound-lg-cinebeam-product-ad.mp4",
+      "使用AE Element 3D插件制作三维立体字，通过摄像机运动、材质光效与动态模糊，实现具有冲击力的品牌片头级文字动画。",
+    role: "E3D制作 / 三维动画 / 片头包装",
+    focus: "三维立体字的镜头运动与光效表现",
+    highlights: ["Element 3D三维立体字建模", "摄像机运动与材质光效", "品牌片头级动态演绎"],
+    media: "https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/AE%E4%BD%9C%E5%93%81/1/E3D%E7%AB%8B%E4%BD%93%E5%AD%97.mp4",
+    poster: "https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/AE%E4%BD%9C%E5%93%81/1/E3D%E7%AB%8B%E4%BD%93%E5%AD%97%E5%B0%81%E9%9D%A2.jpg",
     layout: "standard",
   },
   {
-    slug: "existence-dance",
-    title: "存在",
-    type: "音效设计",
-    category: "sound",
-    duration: "51 sec",
-    intro: "舞蹈艺术片的动作声音、空间回响与情绪张力。",
+    slug: "ae-3d-flythrough",
+    title: "三维穿梭 · 空间动效",
+    type: "AE作品",
+    category: "ae",
+    duration: "22 sec",
+    intro: "AE三维空间场景制作，摄像机运动与粒子效果实现沉浸式穿梭。",
     detail:
-      "从身体运动出发设计声音层级，使动作、空间和画面节奏彼此回应，强化舞蹈影像的张力与呼吸。",
-    role: "动作音效 / 空间设计 / 情绪节奏",
-    focus: "身体动作与空间回响的关系",
-    highlights: ["捕捉动作力度变化", "塑造具有距离感的声场", "用留白承接舞蹈呼吸"],
-    media: "./assets/videos/sound-existence-dance-film.mp4",
-    layout: "portrait",
-  },
-  {
-    slug: "forest-emotion",
-    title: "森系情绪广告",
-    type: "音效设计",
-    category: "sound",
-    duration: "92 sec",
-    intro: "以自然声场和情绪化节奏构建森系广告氛围。",
-    detail:
-      "通过风、环境与细微质感建立自然声场，再以音乐和剪辑节点控制情绪推进，让画面保持轻盈和呼吸感。",
-    role: "环境声 / 情绪设计 / 广告声音",
-    focus: "自然氛围与商业影像节奏",
-    highlights: ["建立连续自然声场", "控制声音密度与留白", "以情绪变化推动观看"],
-    media: "./assets/videos/sound-forest-emotion-ad.mp4",
-    layout: "standard",
+      "在AE中搭建三维空间场景，通过摄像机路径运动、粒子拖尾、景深与光效叠加，营造具有速度感和沉浸感的空间穿梭视觉体验。",
+    role: "三维场景 / 摄像机动画 / 粒子特效",
+    focus: "空间穿梭的速度感与沉浸感",
+    highlights: ["AE三维空间场景搭建", "摄像机路径运动与景深", "粒子拖尾与光效叠加"],
+    media: "https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/AE%E4%BD%9C%E5%93%81/3/%E4%B8%89%E7%BB%B4%E7%A9%BF%E6%A2%AD.mp4",
+    poster: "https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/AE%E4%BD%9C%E5%93%81/3/%E4%B8%89%E7%BB%B4%E7%A9%BF%E6%A2%AD%E5%B0%81%E9%9D%A2.jpg",
+    layout: "wide",
   },
 ];
 
@@ -181,17 +169,16 @@ function tweenValue({ start, end, duration, onUpdate, onComplete }) {
   };
 }
 
-/* 主站展示顺序：第一个为音效设计，其余保持原顺序，左右布局按此顺序交替 */
+/* 主站展示顺序：所有作品竖向排列，左右布局按此顺序交替 */
 const orderedProjects = [
-  "mstudioarts-fashion",
   "buick-envision-plus",
   "mermaid-romance",
   "wuliangye-brand-film",
   "tianhe-jiuxi",
   "hairdryer-douyin",
-  "lg-cinebeam",
-  "existence-dance",
-  "forest-emotion",
+  "ae-city-composite",
+  "ae-e3d-title",
+  "ae-3d-flythrough",
 ]
   .map((slug) => projects.find((project) => project.slug === slug))
   .filter(Boolean);
@@ -465,8 +452,16 @@ function setFilter(filter) {
     button.classList.toggle("is-active", active);
     button.setAttribute("aria-pressed", String(active));
   });
-  renderProjects(filter);
-  renderModules(filter);
+  /* tag仅作视觉标识，点击滚动到对应分类的第一个作品模块 */
+  if (filter === "all") {
+    document.getElementById("work").scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
+  } else {
+    const target = orderedProjects.find((project) => project.category === filter);
+    if (target) {
+      const el = document.getElementById("module-" + target.slug);
+      if (el) el.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth", block: "start" });
+    }
+  }
 }
 
 function initializeDepthCarousel(root, items) {
@@ -819,7 +814,12 @@ function closeProject() {
 heroSound.addEventListener("click", () => {
   heroVideo.muted = !heroVideo.muted;
   heroSound.setAttribute("aria-pressed", String(!heroVideo.muted));
-  heroSound.textContent = heroVideo.muted ? "Sound off" : "Sound on";
+  const iconOff = heroSound.querySelector(".sound-icon--off");
+  const iconOn = heroSound.querySelector(".sound-icon--on");
+  if (iconOff && iconOn) {
+    iconOff.style.display = heroVideo.muted ? "" : "none";
+    iconOn.style.display = heroVideo.muted ? "none" : "";
+  }
 });
 
 menuButton.addEventListener("click", () => {
@@ -1082,7 +1082,6 @@ filters.forEach((button) => {
   button.addEventListener("click", () => setFilter(button.dataset.filter));
 });
 
-renderProjects();
 renderModules();
 initializeComponentGlow();
 revealElements();

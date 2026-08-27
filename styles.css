@@ -2229,3 +2229,56 @@ body.halo-on .cursor-halo {
   width: 20px;
   height: 20px;
 }
+
+/* ============================================================================
+   16. 移动端显示兼容 · 2026-08-27
+   ----------------------------------------------------------------------------
+   置于 §15 之后，确保 ≤720px 下覆盖其桌面级尺寸：
+   - 作品模块：单列卡片，介绍在上、缩小封面在下，修复 media/copy 同格重叠；
+   - 联系区：Email / Phone 并排两列、列内上下排列，字号随断点缩放不再截断。
+   ============================================================================ */
+@media (max-width: 720px) {
+  /* ---------- 作品模块：上介绍 / 下封面 ---------- */
+  .work-module__media,
+  .work-module__copy,
+  .work-module--flip .work-module__media,
+  .work-module--flip .work-module__copy {
+    grid-column: 1;
+    grid-row: auto;
+  }
+  .work-module__copy,
+  .work-module--flip .work-module__copy {
+    order: 1;
+    padding: 32px 20px 26px;
+  }
+  .work-module__media,
+  .work-module--flip .work-module__media {
+    order: 2;
+    min-height: 0;
+    aspect-ratio: 16 / 9;
+    margin: 0 20px 20px;
+    border-radius: var(--radius-panel);
+  }
+
+  /* ---------- 联系区：竖排两列 ---------- */
+  .contact-links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    max-width: none;
+    margin-top: 40px;
+  }
+  .contact-links a {
+    min-height: 132px;
+    padding: 20px 18px;
+  }
+  .contact-links small {
+    margin-bottom: 10px;
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+  .contact-links strong {
+    font-size: 15px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+}

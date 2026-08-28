@@ -1173,32 +1173,14 @@ p {
   background: var(--color-surface);
 }
 
-/* 肖像占位层：4:5 竖幅，虚线占位，照片就绪后自动被覆盖 */
-.about-media__placeholder {
-  display: grid;
-  place-items: center;
+/* 个人视频卡：16:9 横屏（1920×1080），边框随视频宽高比调整，替代原 4:5 肖像占位 */
+.about-video {
+  display: block;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 16 / 9;
   border-radius: var(--radius-panel);
-  border: var(--line-hairline) dashed var(--color-line-strong);
   background: linear-gradient(160deg, hsl(0 0% 11%), hsl(0 0% 6%));
-  color: var(--color-text-tertiary);
-  font-size: var(--text-sm);
-  letter-spacing: 0.14em;
-}
-
-/* 肖像照：绝对定位覆盖占位层，保持原视频卡的 4:5 竖幅与灰度风格 */
-.about-portrait {
-  position: absolute;
-  inset: var(--space-3);
-  z-index: 1;
-  border-radius: var(--radius-panel);
   object-fit: cover;
-  filter: grayscale(0.45) contrast(1.08);
-}
-
-.about-portrait.is-missing {
-  display: none;
 }
 
 /* ============================================================================
@@ -1263,7 +1245,11 @@ p {
 }
 
 .contact-inner h2 {
-  max-width: 12ch;
+  /* 原 max-width: 12ch 按半角字符折算仅约6个汉字宽，导致「一起做点有意思的事」换行；
+     改为不限制宽度并强制单行，字号保持 --text-h1（H2 大小）不变 */
+  max-width: none;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .contact-links {
@@ -1272,6 +1258,8 @@ p {
   gap: var(--gap-grid);
   max-width: 720px;
   margin-top: var(--space-16);
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .contact-links a {
@@ -1807,8 +1795,8 @@ body.halo-on .cursor-halo {
     margin-left: auto;
   }
 
-  .about-media__placeholder {
-    aspect-ratio: 16 / 10;
+  .about-video {
+    aspect-ratio: 16 / 9;
   }
 }
 
@@ -2002,8 +1990,8 @@ body.halo-on .cursor-halo {
     width: 100%;
   }
 
-  .about-media__placeholder {
-    aspect-ratio: 4 / 5;
+  .about-video {
+    aspect-ratio: 16 / 9;
   }
 
   .capability-list {
@@ -2147,11 +2135,24 @@ body.halo-on .cursor-halo {
    15. 迭代修改 · 2026-08-27
    ============================================================================ */
 
-/* 首页标语放大2倍（原17px → 34px） */
+/* 首页标语缩小50%（34px → 17px，即最初17px的尺寸），单行展示不换行 */
 .hero-quote p {
-  font-size: 34px;
+  font-size: 17px;
   line-height: 1.35;
-  max-width: 22ch;
+  max-width: none;
+  white-space: nowrap;
+}
+
+/* 首页主按钮：仅保留「探索作品」，宽度放大为原宽4倍（约96px × 4 = 384px），
+   文字居中，按钮在框架组件内左右居中，高度保持 --control-height 不变 */
+.hero-liquid-primary .hero-actions {
+  justify-content: center;
+}
+
+.hero-liquid-primary .hero-actions .button {
+  width: 384px;
+  max-width: 100%;
+  justify-content: center;
 }
 
 /* 联系方式Email/Phone放大3倍，组件同步扩大 */

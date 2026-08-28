@@ -17,7 +17,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./design-system/tokens.css?v=6" />
-    <link rel="stylesheet" href="./styles.css?v=34" />
+    <link rel="stylesheet" href="./styles.css?v=38" />
   </head>
   <body>
     <div class="cursor-halo" id="cursorHalo" aria-hidden="true"></div>
@@ -83,12 +83,6 @@
                 <p>AI视觉创作者 / AI影视导演 / 品牌视觉内容创作者</p>
                 <div class="hero-actions">
                   <a class="button button-primary liquid-glass-strong glow-chip" href="#work">探索作品</a>
-                  <a class="button button-quiet liquid-glass glow-chip" href="#contact">联系合作</a>
-                </div>
-                <div class="hero-tags" aria-label="核心创作方向">
-                  <span class="liquid-glass">AI TVC</span>
-                  <span class="liquid-glass">AI Drama</span>
-                  <span class="liquid-glass">Commercial Film</span>
                 </div>
               </div>
 
@@ -187,13 +181,16 @@
         </div>
 
         <figure class="about-media reveal">
-          <span class="about-media__placeholder" aria-hidden="true">肖像照待补充</span>
-          <img
-            class="about-portrait"
-            src="./assets/images/portrait.jpg"
-            alt="创作者肖像"
-            onerror="this.classList.add('is-missing')"
-          />
+          <video
+            class="about-video"
+            src="https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/user.mp4"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="auto"
+            aria-label="创作者视频简介"
+          ></video>
         </figure>
       </section>
 

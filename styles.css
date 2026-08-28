@@ -1298,7 +1298,7 @@ p {
 
 .contact-bottom-media {
   position: relative;
-  overflow: hidden;
+  /* 不使用 overflow: hidden：上边缘渐变需向上溢出 80px 晕开到联系区背景 */
   background: #000;
 }
 
@@ -1309,6 +1309,19 @@ p {
   object-fit: cover;
   filter: grayscale(0.3) contrast(1.05);
   opacity: 0.7;
+}
+
+/* 底部视频上边缘模糊渐变：以视频上边缘为中线，向上/向下各 80px 晕开渐浅；
+   中线颜色由 script.js 动态取样视频边缘像素写入（取样失败时保留此兜底色） */
+.contact-bottom-media__edge-fade {
+  position: absolute;
+  top: -80px;
+  left: 0;
+  right: 0;
+  height: 160px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 12, 0.95) 50%, transparent 100%);
 }
 
 /* ============================================================================

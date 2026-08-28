@@ -1114,3 +1114,68 @@ revealElements();
     { passive: true },
   );
 })();
+
+/* 底部视频上边缘模糊渐变：以视频上边缘为中线，向上/向下各 80px 晕开渐浅，
+   中线颜色动态取样视频边缘像素（随播放画面变化实时更新） */
+(function initializeBottomEdgeFade() {
+  const media = document.querySelector(".contact-bottom-media");
+  if (!media) return;
+  const video = media.querySelector("video");
+  const overlay = media.querySelector(".contact-bottom-media__edge-fade");
+  if (!video || !overlay) return;
+
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  const SAMPLE_ROW = 4;    // 从视频内容顶部往下取样的行
+  const MAX_STRIP_W = 120; // 取样宽度上限，控制成本
+
+  /* 兜底色：优先取联系区背景色，取样被跨域画布污染时保留该渐变 */
+  const fallbackRgb = (() => {
+    const el = document.querySelector(".contact-section") || document.body;
+    const color = getComputedStyle(el).backgroundColor;
+    const m = color.match(/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)/);
+    return m ? `${m[1]}, ${m[2]}, ${m[3]}` : "10, 10, 12";
+  })();
+
+  let lastKey = "";
+  overlay.style.background =
+    `linear-gradient(180deg, transparent 0%, rgba(${fallbackRgb}, 0.95) 50%, transparent 100%)`;
+
+  function applyColor(r, g, b) {
+    const key = `${r},${g},${b}`;
+    if (key === lastKey) return;
+    lastKey = key;
+    overlay.style.background =
+      `linear-gradient(180deg, transparent 0%, rgba(${r}, ${g}, ${b}, 0.95) 50%, transparent 100%)`;
+  }
+
+  function sample() {
+    const vw = video.videoWidth;
+    const vh = video.videoHeight;
+    if (!vw || !vh || video.readyState < 2) return;
+    try {
+      const stripW = Math.min(vw, MAX_STRIP_W);
+      canvas.width = stripW;
+      canvas.height = 1;
+      ctx.drawImage(video, 0, Math.min(SAMPLE_ROW, vh - 1), vw, 1, 0, 0, stripW, 1);
+      const data = ctx.getImageData(0, 0, stripW, 1).data;
+      let r = 0;
+      let g = 0;
+      let b = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        r += data[i];
+        g += data[i + 1];
+        b += data[i + 2];
+      }
+      const n = data.length / 4;
+      applyColor(Math.round(r / n), Math.round(g / n), Math.round(b / n));
+    } catch (err) {
+      /* 跨域视频使画布被污染时保留兜底色渐变 */
+    }
+  }
+
+  ["loadedmetadata", "loadeddata", "play", "seeked", "timeupdate"].forEach((type) => {
+    video.addEventListener(type, sample, { passive: true });
+  });
+  sample();
+})();

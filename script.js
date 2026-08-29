@@ -129,6 +129,22 @@ const projects = [
     poster: "https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/AE%E4%BD%9C%E5%93%81/3/%E4%B8%89%E7%BB%B4%E7%A9%BF%E6%A2%AD%E5%B0%81%E9%9D%A2.jpg",
     layout: "wide",
   },
+  {
+    slug: "color-grading-reel",
+    title: "调色作品",
+    type: "调色",
+    category: "color-grading",
+    duration: "—",
+    intro: "以统一影调与情绪色彩完成的调色作品，覆盖多种题材的画面语言表达。",
+    detail:
+      "围绕影视成片完成调色处理，通过色温、对比度、肤色与氛围色的精细控制，让不同素材的画面影调保持一致，强化场景情绪与故事基调，输出成品级色彩。",
+    role: "调色 / 色彩管理",
+    focus: "画面影调统一与情绪色彩表达",
+    highlights: ["统一多素材的画面影调与色彩", "用氛围色强化场景情绪", "完成成品级色彩输出"],
+    media: "https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/%E8%B0%83%E8%89%B2/%E8%B0%83%E8%89%B2%E4%BD%9C%E5%93%81.mp4",
+    poster: "https://zhy-video-bucket.oss-cn-beijing.aliyuncs.com/%E5%BD%B1%E8%A7%86%E4%BD%9C%E5%93%81%E9%9B%86/%E8%B0%83%E8%89%B2/%E8%B0%83%E8%89%B2%E4%BD%9C%E5%93%81%E5%B0%81%E9%9D%A2.jpg",
+    layout: "wide",
+  },
 ];
 
 const workGrid = document.querySelector("#workGrid");
@@ -179,6 +195,7 @@ const orderedProjects = [
   "ae-city-composite",
   "ae-e3d-title",
   "ae-3d-flythrough",
+  "color-grading-reel",
 ]
   .map((slug) => projects.find((project) => project.slug === slug))
   .filter(Boolean);

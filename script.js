@@ -134,7 +134,7 @@ const projects = [
     title: "调色作品",
     type: "调色",
     category: "color-grading",
-    duration: "—",
+    duration: "17 sec",
     intro: "以统一影调与情绪色彩完成的调色作品，覆盖多种题材的画面语言表达。",
     detail:
       "围绕影视成片完成调色处理，通过色温、对比度、肤色与氛围色的精细控制，让不同素材的画面影调保持一致，强化场景情绪与故事基调，输出成品级色彩。",
